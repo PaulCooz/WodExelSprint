@@ -1,9 +1,8 @@
 #pragma once
 
-#include "Checker.cpp"
+#include "Sheet.h"
 
 namespace WodExelSprint {
-
 	using namespace System;
 	using namespace System::ComponentModel;
 	using namespace System::Collections;
@@ -19,10 +18,8 @@ namespace WodExelSprint {
 	/// </summary>
 	public ref class Main : public System::Windows::Forms::Form
 	{
-	private: System::Windows::Forms::Button^ OpenXlsxButton;
 	private:
-
-
+		System::Windows::Forms::Button^ OpenXlsxButton;
 
 	public:
 		Main(void)
@@ -87,29 +84,11 @@ namespace WodExelSprint {
 
 		if (openFileDialog->ShowDialog() == System::Windows::Forms::DialogResult::OK)
 		{
-			Excel::Application^ xlApp = gcnew Excel::ApplicationClass();
-
-			Excel::Workbook^ workbook = xlApp->Workbooks->Open(
-				openFileDialog->FileName,
-				Type::Missing,
-				Type::Missing,
-				Type::Missing,
-				Type::Missing,
-				Type::Missing,
-				Type::Missing,
-				Type::Missing,
-				Type::Missing,
-				Type::Missing,
-				Type::Missing,
-				Type::Missing,
-				Type::Missing,
-				Type::Missing,
-				Type::Missing
-			);
-
-			CheckCells((Excel::Worksheet^)(workbook->ActiveSheet));
-
-			xlApp->Visible = true;
+			auto sheet = gcnew Sheet(openFileDialog->FileName);
+			auto text = sheet->GetStr(5, 4);
+			if (String::IsNullOrEmpty(text)) {
+				MessageBox::Show("cell (5; 4) is empty!");
+			}
 		}
 	}
 	};
