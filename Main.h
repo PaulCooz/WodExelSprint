@@ -85,9 +85,21 @@ namespace WodExelSprint {
 		if (openFileDialog->ShowDialog() == System::Windows::Forms::DialogResult::OK)
 		{
 			auto sheet = gcnew Sheet(openFileDialog->FileName);
-			auto text = sheet->GetStr(5, 4);
-			if (String::IsNullOrEmpty(text)) {
-				MessageBox::Show("cell (5; 4) is empty!");
+			auto worksheets = sheet->GetWorksheetsByName(".*team.*");
+			for (auto i = 0; i < worksheets->Count; i++)
+			{
+				auto worksheet = worksheets[i];
+				auto r = 3;
+				while (!String::IsNullOrEmpty(sheet->GetStr(worksheet, r, 1)))
+				{
+					auto value = System::Single::Parse(sheet->GetStr(worksheet, r, 3));
+					auto notFull = value < 9;
+					auto noReason = String::IsNullOrEmpty(sheet->GetStr(worksheet, r, 4));
+					if (notFull && noReason)
+						sheet->SetColor(worksheet, r, 4, XlRgbColor::rgbYellow);
+
+					r++;
+				}
 			}
 		}
 	}

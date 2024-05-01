@@ -2,6 +2,7 @@
 
 namespace WodExelSprint {
 	using namespace System;
+	using namespace System::Collections::Generic;
 	using namespace Microsoft::Office::Interop::Excel;
 
 	ref class Sheet
@@ -9,11 +10,11 @@ namespace WodExelSprint {
 	private:
 		Microsoft::Office::Interop::Excel::Application^ application;
 		Workbook^ workbook;
-		Worksheet^ worksheet;
-		Range^ cells;
 
 	public:
 		Sheet(String^ path);
-		String^ GetStr(int row, int clm);
+		List<Worksheet^>^ Sheet::GetWorksheetsByName(String^ nameRegExp);
+		String^ Sheet::GetStr(Worksheet^ worksheet, int row, int clm);
+		void Sheet::SetColor(Worksheet^ worksheet, int row, int clm, XlRgbColor color);
 	};
 }
