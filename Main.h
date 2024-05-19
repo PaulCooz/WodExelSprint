@@ -85,22 +85,50 @@ namespace WodExelSprint {
 		if (openFileDialog->ShowDialog() == System::Windows::Forms::DialogResult::OK)
 		{
 			auto sheet = gcnew Sheet(openFileDialog->FileName);
-			auto worksheets = sheet->GetWorksheetsByName(".*team.*");
-			for (auto i = 0; i < worksheets->Count; i++)
-			{
-				auto worksheet = worksheets[i];
-				auto r = 3;
-				while (!String::IsNullOrEmpty(sheet->GetStr(worksheet, r, 1)))
-				{
-					auto value = System::Single::Parse(sheet->GetStr(worksheet, r, 3));
-					auto notFull = value < 9;
-					auto noReason = String::IsNullOrEmpty(sheet->GetStr(worksheet, r, 4));
-					if (notFull && noReason)
-						sheet->SetColor(worksheet, r, 4, XlRgbColor::rgbYellow);
+			auto worksheet = sheet->GetWorksheetsByName("Sprint")[0];
 
-					r++;
+			const static int VelocityCol = 3;
+			const static int AbsenceCol = 4;
+			const static int WaringCol = 6;
+
+			const static int symLen = 3;
+			static unsigned char symBytes[symLen] = { 0xE2, 0x9A, 0xA0 };
+			auto symbol = System::Text::Encoding::UTF8->GetString(symBytes, symLen);
+
+			auto inTeamRange = false;
+			auto skipFirstPerson = false;
+			for (auto r = 1; ; r++)
+			{
+				auto colB = sheet->GetStr(worksheet, r, VelocityCol);
+				if (colB == "Velocity")
+				{
+					skipFirstPerson = true;
+					if (!inTeamRange)
+						inTeamRange = true;
+					continue;
+				}
+				if (inTeamRange && String::IsNullOrEmpty(colB))
+				{
+					inTeamRange = false;
+					break;
+				}
+				auto isNumber = System::Text::RegularExpressions::Regex::IsMatch(colB, "\\d+[\\.,]?\\d*");
+				if (!isNumber || !inTeamRange || skipFirstPerson)
+				{
+					skipFirstPerson = false;
+					continue;
+				}
+
+				auto value = System::Single::Parse(sheet->GetStr(worksheet, r, VelocityCol));
+				auto notFull = value < 9;
+				auto noReason = String::IsNullOrEmpty(sheet->GetStr(worksheet, r, AbsenceCol));
+				if (notFull && noReason)
+				{
+					sheet->SetStr(worksheet, r, WaringCol, symbol);
 				}
 			}
+
+			sheet->SetVisible(true);
 		}
 	}
 	};

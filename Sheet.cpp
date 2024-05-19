@@ -23,8 +23,6 @@ namespace WodExelSprint {
 			Type::Missing,
 			Type::Missing
 		);
-
-		this->application->Visible = true;
 	}
 
 	List<Worksheet^>^ Sheet::GetWorksheetsByName(String^ nameRegExp)
@@ -47,8 +45,19 @@ namespace WodExelSprint {
 		return ((Range^)worksheet->UsedRange->Cells[row, clm])->Text->ToString();
 	}
 
+	void Sheet::SetStr(Worksheet^ worksheet, int row, int clm, String^ str)
+	{
+		auto cells = (Range^)(worksheet->UsedRange->Cells[row, clm]);
+		cells->Value2 = str;
+	}
+
 	void Sheet::SetColor(Worksheet^ worksheet, int row, int clm, XlRgbColor color)
 	{
 		((Range^)worksheet->UsedRange->Cells[row, clm])->Interior->Color = color;
+	}
+
+	void Sheet::SetVisible(bool value)
+	{
+		this->application->Visible = value;
 	}
 }
