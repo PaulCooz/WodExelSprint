@@ -56,6 +56,11 @@ namespace WodExelSprint {
 		((Range^)worksheet->UsedRange->Cells[row, clm])->Interior->Color = color;
 	}
 
+	void Sheet::SetNumberFormat(Worksheet^ worksheet, int row, int clm, String^ format)
+	{
+		((Range^)worksheet->UsedRange->Cells[row, clm])->NumberFormat = format;
+	}
+
 	void Sheet::SetVisible(bool value)
 	{
 		this->application->Visible = value;
