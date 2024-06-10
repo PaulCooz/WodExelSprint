@@ -231,28 +231,27 @@ namespace WodExelSprint {
 			auto col = 2;
 			while (!String::IsNullOrEmpty(sheet->GetStr(worksheet, 1, col))) {
 				auto team = sheet->GetStr(worksheet, 1, col);
-				if (dict->ContainsKey(team)) {
-					if (dict[team] > 0.0) {
-						sheet->SetNumberFormat(worksheet, lastRow, col, "###%");
-						sheet->SetStr(worksheet, lastRow, col, dict[team].ToString(culture));
-					}
-					else {
-						sheet->SetStr(worksheet, lastRow, col, "-");
-					}
-
-					auto sum = 0.0;
-					auto count = 0.0;
-					for (auto i = 2; i <= lastRow; i++) {
-						auto m = Regex::Match(sheet->GetStr(worksheet, i, col), "\\d+");
-						if (m->Success) {
-							sum += Single::Parse(m->Value) / 100.0;
-							count += 1.0;
-						}
-					}
-					auto avg = sum / count;
-					sheet->SetNumberFormat(worksheet, lastRow + 1, col, "###%");
-					sheet->SetStr(worksheet, lastRow + 1, col, avg.ToString(culture));
+				if (dict->ContainsKey(team) && dict[team] > 0.0) {
+					sheet->SetNumberFormat(worksheet, lastRow, col, "###%");
+					sheet->SetStr(worksheet, lastRow, col, dict[team].ToString(culture));
 				}
+				else {
+					sheet->SetStr(worksheet, lastRow, col, "-");
+				}
+
+				auto sum = 0.0;
+				auto count = 0.0;
+				for (auto i = 2; i <= lastRow; i++) {
+					auto m = Regex::Match(sheet->GetStr(worksheet, i, col), "\\d+");
+					if (m->Success) {
+						sum += Single::Parse(m->Value) / 100.0;
+						count += 1.0;
+					}
+				}
+				auto avg = sum / count;
+				sheet->SetNumberFormat(worksheet, lastRow + 1, col, "###%");
+				sheet->SetStr(worksheet, lastRow + 1, col, avg.ToString(culture));
+
 				col++;
 			}
 		}
