@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Sheet.h"
+#include <algorithm>
 
 namespace WodExelSprint {
 	using namespace System;
@@ -213,7 +214,7 @@ namespace WodExelSprint {
 				auto isTeam = Regex::IsMatch(name, TeamNameTemp);
 				if (isTeam) {
 					auto value = System::Single::Parse(sheet->GetStr(worksheet, focusFactorRow, summaryCol), culture);
-					dict->Add(name, value / 100.0);
+					dict->Add(name, value);
 				}
 				summaryCol++;
 			}
@@ -241,13 +242,16 @@ namespace WodExelSprint {
 
 				auto sum = 0.0;
 				auto count = 0.0;
-				for (auto i = 2; i <= lastRow; i++) {
+				auto startRow = std::max(2, lastRow - 9);
+
+				for (auto i = startRow; i <= lastRow; i++) {
 					auto m = Regex::Match(sheet->GetStr(worksheet, i, col), "\\d+");
 					if (m->Success) {
 						sum += Single::Parse(m->Value) / 100.0;
 						count += 1.0;
 					}
 				}
+
 				auto avg = sum / count;
 				sheet->SetNumberFormat(worksheet, lastRow + 1, col, "###%");
 				sheet->SetStr(worksheet, lastRow + 1, col, avg.ToString(culture));
