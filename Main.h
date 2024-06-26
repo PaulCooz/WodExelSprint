@@ -13,6 +13,7 @@ namespace WodExelSprint {
 	using namespace System::IO;
 	using namespace System::Diagnostics;
 	using namespace System::Text::RegularExpressions;
+	using namespace System::Windows::Forms;
 	using namespace Microsoft::Office::Interop;
 
 	/// <summary>
@@ -140,6 +141,52 @@ namespace WodExelSprint {
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
+		}
+
+		Form^ prompt = nullptr;
+
+		String^ ShowInputDialog(String^ text, String^ caption) {
+			if (prompt != nullptr) {
+				return "error";
+			}
+
+			prompt = gcnew Form();
+			prompt->Width = 500;
+			prompt->Height = 150;
+			prompt->FormBorderStyle = System::Windows::Forms::FormBorderStyle::FixedDialog;
+			prompt->Text = caption;
+			prompt->StartPosition = FormStartPosition::CenterScreen;
+
+			auto textLabel = gcnew System::Windows::Forms::Label();
+			textLabel->Left = 50;
+			textLabel->Top = 20;
+			textLabel->Text = text;
+
+			auto textBox = gcnew System::Windows::Forms::TextBox();
+			textBox->Left = 50;
+			textBox->Top = 50;
+			textBox->Width = 400;
+
+			auto confirmation = gcnew System::Windows::Forms::Button();
+			confirmation->Text = "Ok";
+			confirmation->Left = 350;
+			confirmation->Width = 100;
+			confirmation->Top = 70;
+			confirmation->DialogResult = System::Windows::Forms::DialogResult::OK;
+			confirmation->Click += gcnew System::EventHandler(this, &Main::ConfirmInputDialog);
+
+			prompt->Controls->Add(textBox);
+			prompt->Controls->Add(confirmation);
+			prompt->Controls->Add(textLabel);
+			prompt->AcceptButton = confirmation;
+
+			auto success = prompt->ShowDialog() == System::Windows::Forms::DialogResult::OK;
+			return success ? textBox->Text : "";
+		}
+
+		void ConfirmInputDialog(System::Object^ sender, System::EventArgs^ e) {
+			prompt->Close();
+			prompt = nullptr;
 		}
 
 	private: System::Void OpenXlsxFile(System::Object^ sender, System::EventArgs^ e) {
@@ -361,7 +408,7 @@ namespace WodExelSprint {
 
 		auto sheet = gcnew Sheet(openFileDialog->FileName);
 		auto newWorksheet = sheet->AddWorksheet();
-		newWorksheet->Name = "TODO";
+		newWorksheet->Name = ShowInputDialog("enter team name:", "input");
 		sheet->SetVisible(true);
 	}
 	};
