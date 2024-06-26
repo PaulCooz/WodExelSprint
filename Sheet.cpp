@@ -25,6 +25,13 @@ namespace WodExelSprint {
 		);
 	}
 
+	Worksheet^ Sheet::AddWorksheet()
+	{
+		auto sheets = this->workbook->Sheets;
+		auto newSheet = sheets->Add(Type::Missing, sheets[sheets->Count], Type::Missing, Type::Missing);
+		return (Worksheet^)newSheet;
+	}
+
 	List<Worksheet^>^ Sheet::GetWorksheetsByName(String^ nameRegExp)
 	{
 		auto iterator = this->workbook->Worksheets->GetEnumerator();

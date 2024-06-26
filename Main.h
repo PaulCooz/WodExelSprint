@@ -349,7 +349,20 @@ namespace WodExelSprint {
 		sheet->SetVisible(true);
 	}
 	private: System::Void AddTeamXlsxButton_Click(System::Object^ sender, System::EventArgs^ e) {
-		MessageBox::Show("TODO add command");
+		OpenFileDialog^ openFileDialog = gcnew OpenFileDialog;
+
+		openFileDialog->InitialDirectory = ".";
+		openFileDialog->Filter = "xlsx files (*.xlsx)|*.xlsx|All files (*.*)|*.*";
+		openFileDialog->FilterIndex = 1;
+		openFileDialog->RestoreDirectory = true;
+
+		if (openFileDialog->ShowDialog() != System::Windows::Forms::DialogResult::OK)
+			return;
+
+		auto sheet = gcnew Sheet(openFileDialog->FileName);
+		auto newWorksheet = sheet->AddWorksheet();
+		newWorksheet->Name = "TODO";
+		sheet->SetVisible(true);
 	}
 	};
 }
