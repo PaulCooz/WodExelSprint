@@ -58,6 +58,18 @@ namespace WodExelSprint {
 		cells->Value2 = str;
 	}
 
+	String^ Sheet::GetStr(Worksheet^ worksheet, String^ range)
+	{
+		return ((Range^)worksheet->Range[range, Type::Missing])->Text->ToString();
+	}
+
+	void Sheet::SetStr(Worksheet^ worksheet, String^ range, String^ str)
+	{
+		auto cells = (Range^)(worksheet->Range[range, Type::Missing]);
+		cells->Merge(Type::Missing);
+		cells->Value2 = str;
+	}
+
 	void Sheet::SetColor(Worksheet^ worksheet, int row, int clm, XlRgbColor color)
 	{
 		((Range^)worksheet->UsedRange->Cells[row, clm])->Interior->Color = color;

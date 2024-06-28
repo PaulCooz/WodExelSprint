@@ -409,6 +409,25 @@ namespace WodExelSprint {
 		auto sheet = gcnew Sheet(openFileDialog->FileName);
 		auto newWorksheet = sheet->AddWorksheet();
 		newWorksheet->Name = ShowInputDialog("enter team name:", "input");
+		sheet->SetStr(newWorksheet, "A1:J1", newWorksheet->Name + " planing table");
+		sheet->SetStr(newWorksheet, "A2:A3", "User stories");
+		sheet->SetStr(newWorksheet, "B2:C2", "Estimated SP:");
+		sheet->SetStr(newWorksheet, "E2:F2", "Actual focus factor:");
+		sheet->SetStr(newWorksheet, "H2:I2", "Unused velocity:");
+		sheet->SetStr(newWorksheet, "B3:D3", "Total estimation");
+		sheet->SetStr(newWorksheet, "E3:J3", "Teammates estimations");
+
+		String^ leadName = "";
+		while (String::IsNullOrEmpty(leadName))
+			leadName = ShowInputDialog("enter lead name:", "input");
+		sheet->SetStr(newWorksheet, 4, 5, leadName);
+
+		for (int row = 4; row <= 10; row += 3) {
+			sheet->SetStr(newWorksheet, row, 2, "Dev");
+			sheet->SetStr(newWorksheet, row + 1, 2, "QA");
+			sheet->SetStr(newWorksheet, "B" + (row + 2) + ":C" + (row + 2), "Total");
+		}
+
 		sheet->SetVisible(true);
 	}
 	};
