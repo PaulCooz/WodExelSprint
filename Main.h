@@ -428,6 +428,18 @@ namespace WodExelSprint {
 			sheet->SetStr(newWorksheet, "B" + (row + 2) + ":C" + (row + 2), "Total");
 		}
 
+		auto worksheet = sheet->GetWorksheetsByName("Focus factor")[0];
+		int newCol = 2;
+		for (; ; newCol++) {
+			if (String::IsNullOrEmpty(sheet->GetStr(worksheet, 1, newCol))) {
+				sheet->SetStr(worksheet, 1, newCol, newWorksheet->Name);
+				for (int row = 2; !String::IsNullOrEmpty(sheet->GetStr(worksheet, row, 1)); row++) {
+					sheet->SetStr(worksheet, row, newCol, "-");
+				}
+				break;
+			}
+		}
+
 		sheet->SetVisible(true);
 	}
 	};
