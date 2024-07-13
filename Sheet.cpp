@@ -70,7 +70,14 @@ namespace WodExelSprint {
 		cells->Value2 = str;
 	}
 
-	void Sheet::SetColor(Worksheet^ worksheet, int row, int clm, XlRgbColor color)
+	void Sheet::SetColor(Worksheet^ worksheet, String^ range, Object^ color)
+	{
+		auto cells = (Range^)(worksheet->Range[range, Type::Missing]);
+		cells->Merge(Type::Missing);
+		cells->Interior->Color = color;
+	}
+
+	void Sheet::SetColor(Worksheet^ worksheet, int row, int clm, Object^ color)
 	{
 		((Range^)worksheet->UsedRange->Cells[row, clm])->Interior->Color = color;
 	}

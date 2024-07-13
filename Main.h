@@ -422,10 +422,17 @@ namespace WodExelSprint {
 			leadName = ShowInputDialog("enter lead name:", "input");
 		sheet->SetStr(newWorksheet, 4, 5, leadName);
 
+		auto colorHtml = ShowInputDialog("enter color as html #RRGGBB", "input");
+		auto color = System::Drawing::ColorTranslator::FromHtml(colorHtml);
+
 		for (int row = 4; row <= 10; row += 3) {
 			sheet->SetStr(newWorksheet, row, 2, "Dev");
 			sheet->SetStr(newWorksheet, row + 1, 2, "QA");
 			sheet->SetStr(newWorksheet, "B" + (row + 2) + ":C" + (row + 2), "Total");
+
+			sheet->SetColor(newWorksheet, "A" + (row)+":A" + (row + 2), color);
+			for (int clm = 5; clm <= 10; clm++)
+				sheet->SetColor(newWorksheet, row, clm, color);
 		}
 
 		auto worksheet = sheet->GetWorksheetsByName("Focus factor")[0];
