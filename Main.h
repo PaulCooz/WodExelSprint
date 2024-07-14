@@ -411,18 +411,25 @@ namespace WodExelSprint {
 		newWorksheet->Name = ShowInputDialog("enter team name:", "input");
 		sheet->SetStr(newWorksheet, "A1:J1", newWorksheet->Name + " planing table");
 		sheet->SetFontBold(newWorksheet, "A1:J1", true);
+		sheet->SetBorder(newWorksheet, "A1:J1", true);
 		sheet->SetStr(newWorksheet, "A2:A3", "User stories");
 		sheet->SetFontBold(newWorksheet, "A2:A3", true);
+		sheet->SetBorder(newWorksheet, "A2:A3", true);
 		sheet->SetStr(newWorksheet, "B2:C2", "Estimated SP:");
 		sheet->SetFontBold(newWorksheet, "B2:C2", true);
+		sheet->SetBorder(newWorksheet, "B2:D2", true);
 		sheet->SetStr(newWorksheet, "E2:F2", "Actual focus factor:");
 		sheet->SetFontBold(newWorksheet, "E2:F2", true);
+		sheet->SetBorder(newWorksheet, "E2:G2", true);
 		sheet->SetStr(newWorksheet, "H2:I2", "Unused velocity:");
 		sheet->SetFontBold(newWorksheet, "H2:I2", true);
+		sheet->SetBorder(newWorksheet, "H2:J2", true);
 		sheet->SetStr(newWorksheet, "B3:D3", "Total estimation");
 		sheet->SetFontBold(newWorksheet, "B3:D3", true);
+		sheet->SetBorder(newWorksheet, "B3:D3", true);
 		sheet->SetStr(newWorksheet, "E3:J3", "Teammates estimations");
 		sheet->SetFontBold(newWorksheet, "E3:J3", true);
+		sheet->SetBorder(newWorksheet, "E3:J3", true);
 
 		String^ leadName = "";
 		while (String::IsNullOrEmpty(leadName))
@@ -448,7 +455,14 @@ namespace WodExelSprint {
 			sheet->SetFontBold(newWorksheet, totalRange, true);
 			sheet->SetHorAlign(newWorksheet, totalRange, XlHAlign::xlHAlignRight);
 
-			sheet->SetColor(newWorksheet, "A" + (row)+":A" + (row + 2), color);
+			auto storyRange = "A" + (row)+":A" + (row + 2);
+			sheet->SetColor(newWorksheet, storyRange, color);
+
+			sheet->SetBorder(newWorksheet, storyRange, true);
+			sheet->SetBorder(newWorksheet, "B" + (row)+":D" + (row + 2), true);
+			sheet->SetBorder(newWorksheet, "E" + (row)+":J" + (row + 2), true);
+			sheet->SetBorder(newWorksheet, "E" + (row)+":J" + (row), true);
+
 			for (int clm = 5; clm <= 10; clm++)
 				sheet->SetColor(newWorksheet, row, clm, color);
 		}
@@ -472,14 +486,37 @@ namespace WodExelSprint {
 		worksheet = sheet->GetWorksheetsByName("Sprint")[0];
 		sheet->InsertRowUp(worksheet, 37);
 		sheet->SetStr(worksheet, 37, 1, newWorksheet->Name);
+		sheet->SetBorder(worksheet, 37, 1, true);
 		sheet->SetStr(worksheet, 37, 2, "Focus factor");
+		sheet->SetFontBold(worksheet, 37, 2, true);
 		sheet->SetStr(worksheet, 37, 3, "Velocity");
+		sheet->SetFontBold(worksheet, 37, 3, true);
 		sheet->SetStr(worksheet, "D37:E37", "Absence");
+		sheet->SetFontBold(worksheet, "D37:E37", true);
 		sheet->SetColor(worksheet, 37, 1, color);
 		for (int i = 38; i < 38 + 6; i++) {
 			sheet->InsertRowUp(worksheet, i);
 		}
+		for (int i = 38; i < 38 + 6; i++) {
+			sheet->SetStr(worksheet, "D" + i + ":E" + i, "");
 
+			sheet->SetBorder(worksheet, i, 1, false);
+			sheet->SetBorder(worksheet, i, 2, false);
+			sheet->SetBorder(worksheet, i, 3, false);
+			sheet->SetBorder(worksheet, i, 4, false);
+			sheet->SetBorder(worksheet, i, 5, false);
+		}
+		sheet->SetStr(worksheet, 38, 1, leadName);
+
+		sheet->SetBorder(worksheet, "A44:A44", true);
+		sheet->SetBorder(worksheet, "B44:B44", true);
+		sheet->SetBorder(worksheet, "C44:C44", true);
+		sheet->SetBorder(worksheet, "D44:E44", true);
+
+		sheet->SetBorder(worksheet, "A38:A43", true);
+		sheet->SetBorder(worksheet, "B38:B43", true);
+		sheet->SetBorder(worksheet, "C38:C43", true);
+		sheet->SetBorder(worksheet, "D38:E43", true);
 		sheet->SetHorAlign(worksheet, "A37:E43", XlHAlign::xlHAlignCenter);
 		sheet->SetVerAlign(worksheet, "A37:E43", XlHAlign::xlHAlignCenter);
 

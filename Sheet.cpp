@@ -135,10 +135,22 @@ namespace WodExelSprint {
 		((Range^)worksheet->UsedRange->Cells[row, clm])->NumberFormat = format;
 	}
 
-	void Sheet::SetBorder(Worksheet^ worksheet, String^ range)
+	void Sheet::SetBorder(Worksheet^ worksheet, int row, int clm, bool value)
+	{
+		auto cells = (Range^)(worksheet->UsedRange->Cells[row, clm]);
+		if (value)
+			cells->BorderAround(XlLineStyle::xlContinuous, XlBorderWeight::xlThin, XlColorIndex::xlColorIndexAutomatic, Type::Missing);
+		else
+			cells->Borders->LineStyle = XlLineStyle::xlLineStyleNone;
+	}
+
+	void Sheet::SetBorder(Worksheet^ worksheet, String^ range, bool value)
 	{
 		auto cells = (Range^)(worksheet->Range[range, Type::Missing]);
-		cells->BorderAround(XlLineStyle::xlContinuous, XlBorderWeight::xlThick, XlColorIndex::xlColorIndexAutomatic, Type::Missing);
+		if (value)
+			cells->BorderAround(XlLineStyle::xlContinuous, XlBorderWeight::xlThin, XlColorIndex::xlColorIndexAutomatic, Type::Missing);
+		else
+			cells->Borders->LineStyle = XlLineStyle::xlLineStyleNone;
 	}
 
 	void Sheet::InsertRowUp(Worksheet^ worksheet, int row)

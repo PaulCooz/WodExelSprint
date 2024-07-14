@@ -30,7 +30,8 @@ namespace WodExelSprint {
 		void Sheet::SetVerAlign(Worksheet^ worksheet, int row, int clm, Object^ value);
 		void Sheet::SetVerAlign(Worksheet^ worksheet, String^ range, Object^ value);
 		void Sheet::SetNumberFormat(Worksheet^ worksheet, int row, int clm, String^ format);
-		void Sheet::SetBorder(Worksheet^ worksheet, String^ range);
+		void Sheet::SetBorder(Worksheet^ worksheet, int row, int clm, bool value);
+		void Sheet::SetBorder(Worksheet^ worksheet, String^ range, bool value);
 		void Sheet::InsertRowUp(Worksheet^ worksheet, int row);
 		void Sheet::InsertColLeft(Worksheet^ worksheet, int col);
 		void SetVisible(bool value);
