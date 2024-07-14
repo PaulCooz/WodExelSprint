@@ -407,7 +407,7 @@ namespace WodExelSprint {
 			return;
 
 		auto sheet = gcnew Sheet(openFileDialog->FileName);
-		auto newWorksheet = sheet->AddWorksheet();
+		auto newWorksheet = sheet->AddWorksheet(2);
 		newWorksheet->Name = ShowInputDialog("enter team name:", "input");
 		sheet->SetStr(newWorksheet, "A1:J1", newWorksheet->Name + " planing table");
 		sheet->SetFontBold(newWorksheet, "A1:J1", true);
@@ -458,12 +458,34 @@ namespace WodExelSprint {
 		for (; ; newCol++) {
 			if (String::IsNullOrEmpty(sheet->GetStr(worksheet, 1, newCol))) {
 				sheet->SetStr(worksheet, 1, newCol, newWorksheet->Name);
+				sheet->SetHorAlign(worksheet, 1, newCol, XlHAlign::xlHAlignCenter);
+				sheet->SetVerAlign(worksheet, 1, newCol, XlHAlign::xlHAlignCenter);
+				sheet->SetColor(worksheet, 1, newCol, color);
+
 				for (int row = 2; !String::IsNullOrEmpty(sheet->GetStr(worksheet, row, 1)); row++) {
 					sheet->SetStr(worksheet, row, newCol, "-");
 				}
 				break;
 			}
 		}
+
+		worksheet = sheet->GetWorksheetsByName("Sprint")[0];
+		sheet->InsertRowUp(worksheet, 37);
+		sheet->SetStr(worksheet, 37, 1, newWorksheet->Name);
+		sheet->SetStr(worksheet, 37, 2, "Focus factor");
+		sheet->SetStr(worksheet, 37, 3, "Velocity");
+		sheet->SetStr(worksheet, "D37:E37", "Absence");
+		sheet->SetColor(worksheet, 37, 1, color);
+		for (int i = 38; i < 38 + 6; i++) {
+			sheet->InsertRowUp(worksheet, i);
+		}
+
+		sheet->SetHorAlign(worksheet, "A37:E43", XlHAlign::xlHAlignCenter);
+		sheet->SetVerAlign(worksheet, "A37:E43", XlHAlign::xlHAlignCenter);
+
+		sheet->InsertColLeft(worksheet, 6);
+		sheet->SetColor(worksheet, 48, 6, color);
+		sheet->SetStr(worksheet, 48, 6, newWorksheet->Name);
 
 		sheet->SetVisible(true);
 	}

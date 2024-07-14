@@ -25,10 +25,10 @@ namespace WodExelSprint {
 		);
 	}
 
-	Worksheet^ Sheet::AddWorksheet()
+	Worksheet^ Sheet::AddWorksheet(int indexFromBack)
 	{
 		auto sheets = this->workbook->Sheets;
-		auto newSheet = sheets->Add(Type::Missing, sheets[sheets->Count], Type::Missing, Type::Missing);
+		auto newSheet = sheets->Add(Type::Missing, sheets[sheets->Count - indexFromBack], Type::Missing, Type::Missing);
 		return (Worksheet^)newSheet;
 	}
 
@@ -101,10 +101,22 @@ namespace WodExelSprint {
 		cells->Font->Bold = value;
 	}
 
+	void Sheet::SetHorAlign(Worksheet^ worksheet, int row, int clm, Object^ value)
+	{
+		auto cells = (Range^)(worksheet->UsedRange->Cells[row, clm]);
+		cells->HorizontalAlignment = value;
+	}
+
 	void Sheet::SetHorAlign(Worksheet^ worksheet, String^ range, Object^ value)
 	{
 		auto cells = (Range^)(worksheet->Range[range, Type::Missing]);
 		cells->HorizontalAlignment = value;
+	}
+
+	void Sheet::SetVerAlign(Worksheet^ worksheet, int row, int clm, Object^ value)
+	{
+		auto cells = (Range^)(worksheet->UsedRange->Cells[row, clm]);
+		cells->VerticalAlignment = value;
 	}
 
 	void Sheet::SetVerAlign(Worksheet^ worksheet, String^ range, Object^ value)
@@ -121,6 +133,22 @@ namespace WodExelSprint {
 	void Sheet::SetNumberFormat(Worksheet^ worksheet, int row, int clm, String^ format)
 	{
 		((Range^)worksheet->UsedRange->Cells[row, clm])->NumberFormat = format;
+	}
+
+	void Sheet::SetBorder(Worksheet^ worksheet, String^ range)
+	{
+		auto cells = (Range^)(worksheet->Range[range, Type::Missing]);
+		cells->BorderAround(XlLineStyle::xlContinuous, XlBorderWeight::xlThick, XlColorIndex::xlColorIndexAutomatic, Type::Missing);
+	}
+
+	void Sheet::InsertRowUp(Worksheet^ worksheet, int row)
+	{
+		((Range^)worksheet->Rows[row, Type::Missing])->Insert(Type::Missing, Type::Missing);
+	}
+
+	void Sheet::InsertColLeft(Worksheet^ worksheet, int col)
+	{
+		((Range^)worksheet->Columns[col, Type::Missing])->Insert(XlInsertShiftDirection::xlShiftToRight, XlInsertFormatOrigin::xlFormatFromRightOrBelow);
 	}
 
 	void Sheet::SetVisible(bool value)

@@ -13,7 +13,7 @@ namespace WodExelSprint {
 
 	public:
 		Sheet(String^ path);
-		Worksheet^ Sheet::AddWorksheet();
+		Worksheet^ Sheet::AddWorksheet(int indexFromBack);
 		List<Worksheet^>^ Sheet::GetWorksheetsByName(String^ nameRegExp);
 		String^ Sheet::GetStr(Worksheet^ worksheet, int row, int clm);
 		void Sheet::SetStr(Worksheet^ worksheet, int row, int clm, String^ str);
@@ -25,9 +25,14 @@ namespace WodExelSprint {
 		void Sheet::SetRowHeight(Worksheet^ worksheet, String^ range, float value);
 		void Sheet::SetFontBold(Worksheet^ worksheet, int row, int clm, bool value);
 		void Sheet::SetFontBold(Worksheet^ worksheet, String^ range, bool value);
+		void Sheet::SetHorAlign(Worksheet^ worksheet, int row, int clm, Object^ value);
 		void Sheet::SetHorAlign(Worksheet^ worksheet, String^ range, Object^ value);
+		void Sheet::SetVerAlign(Worksheet^ worksheet, int row, int clm, Object^ value);
 		void Sheet::SetVerAlign(Worksheet^ worksheet, String^ range, Object^ value);
 		void Sheet::SetNumberFormat(Worksheet^ worksheet, int row, int clm, String^ format);
+		void Sheet::SetBorder(Worksheet^ worksheet, String^ range);
+		void Sheet::InsertRowUp(Worksheet^ worksheet, int row);
+		void Sheet::InsertColLeft(Worksheet^ worksheet, int col);
 		void SetVisible(bool value);
 	};
 }
