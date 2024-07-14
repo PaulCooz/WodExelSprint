@@ -21,6 +21,12 @@ namespace WodExelSprint {
 		void Sheet::SetStr(Worksheet^ worksheet, String^ range, String^ str);
 		void Sheet::SetColor(Worksheet^ worksheet, int row, int clm, Object^ color);
 		void Sheet::SetColor(Worksheet^ worksheet, String^ range, Object^ color);
+		void Sheet::SetColWidth(Worksheet^ worksheet, String^ range, float value);
+		void Sheet::SetRowHeight(Worksheet^ worksheet, String^ range, float value);
+		void Sheet::SetFontBold(Worksheet^ worksheet, int row, int clm, bool value);
+		void Sheet::SetFontBold(Worksheet^ worksheet, String^ range, bool value);
+		void Sheet::SetHorAlign(Worksheet^ worksheet, String^ range, Object^ value);
+		void Sheet::SetVerAlign(Worksheet^ worksheet, String^ range, Object^ value);
 		void Sheet::SetNumberFormat(Worksheet^ worksheet, int row, int clm, String^ format);
 		void SetVisible(bool value);
 	};

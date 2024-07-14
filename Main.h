@@ -410,12 +410,19 @@ namespace WodExelSprint {
 		auto newWorksheet = sheet->AddWorksheet();
 		newWorksheet->Name = ShowInputDialog("enter team name:", "input");
 		sheet->SetStr(newWorksheet, "A1:J1", newWorksheet->Name + " planing table");
+		sheet->SetFontBold(newWorksheet, "A1:J1", true);
 		sheet->SetStr(newWorksheet, "A2:A3", "User stories");
+		sheet->SetFontBold(newWorksheet, "A2:A3", true);
 		sheet->SetStr(newWorksheet, "B2:C2", "Estimated SP:");
+		sheet->SetFontBold(newWorksheet, "B2:C2", true);
 		sheet->SetStr(newWorksheet, "E2:F2", "Actual focus factor:");
+		sheet->SetFontBold(newWorksheet, "E2:F2", true);
 		sheet->SetStr(newWorksheet, "H2:I2", "Unused velocity:");
+		sheet->SetFontBold(newWorksheet, "H2:I2", true);
 		sheet->SetStr(newWorksheet, "B3:D3", "Total estimation");
+		sheet->SetFontBold(newWorksheet, "B3:D3", true);
 		sheet->SetStr(newWorksheet, "E3:J3", "Teammates estimations");
+		sheet->SetFontBold(newWorksheet, "E3:J3", true);
 
 		String^ leadName = "";
 		while (String::IsNullOrEmpty(leadName))
@@ -425,10 +432,21 @@ namespace WodExelSprint {
 		auto colorHtml = ShowInputDialog("enter color as html #RRGGBB", "input");
 		auto color = System::Drawing::ColorTranslator::FromHtml(colorHtml);
 
+		sheet->SetColWidth(newWorksheet, "A:A", 63);
+		sheet->SetRowHeight(newWorksheet, "A:A", 22);
+		sheet->SetFontBold(newWorksheet, 1, 1, true);
+
+		sheet->SetHorAlign(newWorksheet, "A1:J12", XlHAlign::xlHAlignCenter);
+		sheet->SetVerAlign(newWorksheet, "A1:J12", XlHAlign::xlHAlignCenter);
+
 		for (int row = 4; row <= 10; row += 3) {
 			sheet->SetStr(newWorksheet, row, 2, "Dev");
 			sheet->SetStr(newWorksheet, row + 1, 2, "QA");
-			sheet->SetStr(newWorksheet, "B" + (row + 2) + ":C" + (row + 2), "Total");
+
+			auto totalRange = "B" + (row + 2) + ":C" + (row + 2);
+			sheet->SetStr(newWorksheet, totalRange, "Total");
+			sheet->SetFontBold(newWorksheet, totalRange, true);
+			sheet->SetHorAlign(newWorksheet, totalRange, XlHAlign::xlHAlignRight);
 
 			sheet->SetColor(newWorksheet, "A" + (row)+":A" + (row + 2), color);
 			for (int clm = 5; clm <= 10; clm++)

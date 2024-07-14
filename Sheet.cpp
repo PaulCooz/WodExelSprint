@@ -77,6 +77,42 @@ namespace WodExelSprint {
 		cells->Interior->Color = color;
 	}
 
+	void Sheet::SetColWidth(Worksheet^ worksheet, String^ range, float value)
+	{
+		auto cells = (Range^)(worksheet->Range[range, Type::Missing]);
+		cells->ColumnWidth = value;
+	}
+
+	void Sheet::SetRowHeight(Worksheet^ worksheet, String^ range, float value)
+	{
+		auto cells = (Range^)(worksheet->Range[range, Type::Missing]);
+		cells->RowHeight = value;
+	}
+
+	void Sheet::SetFontBold(Worksheet^ worksheet, int row, int clm, bool value)
+	{
+		auto cells = (Range^)(worksheet->UsedRange->Cells[row, clm]);
+		cells->Font->Bold = value;
+	}
+
+	void Sheet::SetFontBold(Worksheet^ worksheet, String^ range, bool value)
+	{
+		auto cells = (Range^)(worksheet->Range[range, Type::Missing]);
+		cells->Font->Bold = value;
+	}
+
+	void Sheet::SetHorAlign(Worksheet^ worksheet, String^ range, Object^ value)
+	{
+		auto cells = (Range^)(worksheet->Range[range, Type::Missing]);
+		cells->HorizontalAlignment = value;
+	}
+
+	void Sheet::SetVerAlign(Worksheet^ worksheet, String^ range, Object^ value)
+	{
+		auto cells = (Range^)(worksheet->Range[range, Type::Missing]);
+		cells->VerticalAlignment = value;
+	}
+
 	void Sheet::SetColor(Worksheet^ worksheet, int row, int clm, Object^ color)
 	{
 		((Range^)worksheet->UsedRange->Cells[row, clm])->Interior->Color = color;
