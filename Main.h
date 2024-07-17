@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Sheet.h"
 #include <algorithm>
@@ -419,9 +419,11 @@ namespace WodExelSprint {
 		sheet->SetFontBold(newWorksheet, "B2:C2", true);
 		sheet->SetBorder(newWorksheet, "B2:D2", true);
 		sheet->SetStr(newWorksheet, "E2:F2", "Actual focus factor:");
+		sheet->SetStr(newWorksheet, "G2:G2", "='Focus factor'!H56");
 		sheet->SetFontBold(newWorksheet, "E2:F2", true);
 		sheet->SetBorder(newWorksheet, "E2:G2", true);
 		sheet->SetStr(newWorksheet, "H2:I2", "Unused velocity:");
+		sheet->SetStr(newWorksheet, "J2:J2", "='Focus factor'!H55");
 		sheet->SetFontBold(newWorksheet, "H2:I2", true);
 		sheet->SetBorder(newWorksheet, "H2:J2", true);
 		sheet->SetStr(newWorksheet, "B3:D3", "Total estimation");
@@ -454,6 +456,7 @@ namespace WodExelSprint {
 			sheet->SetStr(newWorksheet, totalRange, "Total");
 			sheet->SetFontBold(newWorksheet, totalRange, true);
 			sheet->SetHorAlign(newWorksheet, totalRange, XlHAlign::xlHAlignRight);
+			sheet->SetStr(newWorksheet, row + 2, 4, "=SUM(" + "D" + row + ":D" + (row + 1) + ")");
 
 			auto storyRange = "A" + (row)+":A" + (row + 2);
 			sheet->SetColor(newWorksheet, storyRange, color);
@@ -523,6 +526,12 @@ namespace WodExelSprint {
 		sheet->InsertColLeft(worksheet, 6);
 		sheet->SetColor(worksheet, 48, 6, color);
 		sheet->SetStr(worksheet, 48, 6, newWorksheet->Name);
+		sheet->SetStr(worksheet, 49, 6, "=SUM(C38:C43)");
+		sheet->SetStr(worksheet, 50, 6, "='Focus factor'!H56");
+		sheet->SetStr(worksheet, 51, 6, "'-");
+		sheet->SetStr(worksheet, 52, 6, "'-");
+		sheet->SetStr(worksheet, 53, 6, "=F52/F49");
+		sheet->SetStr(worksheet, 54, 6, "=F51-F52");
 
 		sheet->SetVisible(true);
 	}
