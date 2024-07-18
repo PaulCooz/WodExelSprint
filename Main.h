@@ -416,14 +416,15 @@ namespace WodExelSprint {
 		sheet->SetFontBold(newWorksheet, "A2:A3", true);
 		sheet->SetBorder(newWorksheet, "A2:A3", true);
 		sheet->SetStr(newWorksheet, "B2:C2", "Estimated SP:");
+		sheet->SetStr(newWorksheet, 2, 4, "=SUMIFS('" + newWorksheet->Name + "'!$D$4:$D$102, '" + newWorksheet->Name + "'!$B$4:$B$102, \"Dev\")");
 		sheet->SetFontBold(newWorksheet, "B2:C2", true);
 		sheet->SetBorder(newWorksheet, "B2:D2", true);
 		sheet->SetStr(newWorksheet, "E2:F2", "Actual focus factor:");
-		sheet->SetStr(newWorksheet, "G2:G2", "='Focus factor'!H56");
+		sheet->SetStr(newWorksheet, "G2:G2", "='Focus factor'!H55");
 		sheet->SetFontBold(newWorksheet, "E2:F2", true);
 		sheet->SetBorder(newWorksheet, "E2:G2", true);
 		sheet->SetStr(newWorksheet, "H2:I2", "Unused velocity:");
-		sheet->SetStr(newWorksheet, "J2:J2", "='Focus factor'!H55");
+		sheet->SetStr(newWorksheet, "J2:J2", "='Focus factor'!H56");
 		sheet->SetFontBold(newWorksheet, "H2:I2", true);
 		sheet->SetBorder(newWorksheet, "H2:J2", true);
 		sheet->SetStr(newWorksheet, "B3:D3", "Total estimation");
@@ -469,6 +470,12 @@ namespace WodExelSprint {
 			for (int clm = 5; clm <= 10; clm++)
 				sheet->SetColor(newWorksheet, row, clm, color);
 		}
+		sheet->SetStr(newWorksheet, 4 + 0, 3, "=IF(COUNT(E5:H5)>0,AVERAGE(E5:H5),0)");
+		sheet->SetStr(newWorksheet, 5 + 0, 3, "=IF(COUNT(I5:J5)>0,AVERAGE(I5:J5),0)");
+		sheet->SetStr(newWorksheet, 4 + 3, 3, "=IF(COUNT(E7:H7)>0,AVERAGE(E7:H7),0)");
+		sheet->SetStr(newWorksheet, 5 + 3, 3, "=IF(COUNT(I7:J7)>0,AVERAGE(I7:J7),0)");
+		sheet->SetStr(newWorksheet, 4 + 6, 3, "=IF(COUNT(E10:H10)>0,AVERAGE(E10:H10),0)");
+		sheet->SetStr(newWorksheet, 5 + 6, 3, "=IF(COUNT(I10:J10)>0,AVERAGE(I10:J10),0)");
 
 		auto worksheet = sheet->GetWorksheetsByName("Focus factor")[0];
 		int newCol = 2;
@@ -502,6 +509,8 @@ namespace WodExelSprint {
 		}
 		for (int i = 38; i < 38 + 6; i++) {
 			sheet->SetStr(worksheet, "D" + i + ":E" + i, "");
+			sheet->SetStr(worksheet, i, 2, "=C" + i + "/$B$2");
+			sheet->SetStr(worksheet, i, 3, "0");
 
 			sheet->SetBorder(worksheet, i, 1, false);
 			sheet->SetBorder(worksheet, i, 2, false);
@@ -528,8 +537,8 @@ namespace WodExelSprint {
 		sheet->SetStr(worksheet, 48, 6, newWorksheet->Name);
 		sheet->SetStr(worksheet, 49, 6, "=SUM(C38:C43)");
 		sheet->SetStr(worksheet, 50, 6, "='Focus factor'!H56");
-		sheet->SetStr(worksheet, 51, 6, "'-");
-		sheet->SetStr(worksheet, 52, 6, "'-");
+		sheet->SetStr(worksheet, 51, 6, "=ROUND(F49*F50, 0)");
+		sheet->SetStr(worksheet, 52, 6, "='" + newWorksheet->Name + "'!D2");
 		sheet->SetStr(worksheet, 53, 6, "=F52/F49");
 		sheet->SetStr(worksheet, 54, 6, "=F51-F52");
 
