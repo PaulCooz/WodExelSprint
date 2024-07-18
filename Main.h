@@ -409,7 +409,7 @@ namespace WodExelSprint {
 		auto sheet = gcnew Sheet(openFileDialog->FileName);
 		auto newWorksheet = sheet->AddWorksheet(2);
 		newWorksheet->Name = ShowInputDialog("enter team name:", "input");
-		sheet->SetStr(newWorksheet, "A1:J1", newWorksheet->Name + " planing table");
+		sheet->SetStr(newWorksheet, "A1:J1", newWorksheet->Name + " planning table");
 		sheet->SetFontBold(newWorksheet, "A1:J1", true);
 		sheet->SetBorder(newWorksheet, "A1:J1", true);
 		sheet->SetStr(newWorksheet, "A2:A3", "User stories");
