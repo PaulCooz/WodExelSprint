@@ -445,13 +445,26 @@ namespace WodExelSprint {
 		sheet->SetFontBold(newWorksheet, "E3:J3", true);
 		sheet->SetBorder(newWorksheet, "E3:J3", true);
 
-		int countDevelopers = Int32::Parse(ShowInputDialog("enter count or developers:", "input"));
 		List<String^>^ developers = gcnew List<String^>();
-		for (int i = 0; i < countDevelopers; i++)
-			developers->Add(ShowInputDialog("enter developer #" + (i + 1) + " name:", "input"));
+		for (int i = 0; i < 6; i++)
+			developers->Add("");
+
+		{
+			int countDevelopers = Int32::Parse(ShowInputDialog("enter count or developers:", "input"));
+			int front = 0;
+			int back = developers->Count - 1;
+			for (int i = 0; i < countDevelopers; i++) {
+				auto name = ShowInputDialog("enter developer #" + (i + 1) + " name:", "input");
+				if (name->StartsWith("[QA]"))
+					developers[back--] = name;
+				else
+					developers[front++] = name;
+			}
+		}
 
 		auto colorHtml = ShowInputDialog("enter color as html #RRGGBB", "input");
 		auto color = System::Drawing::ColorTranslator::FromHtml(colorHtml);
+		auto colorQA = System::Drawing::Color::FromArgb(255, 217, 102);
 
 		sheet->SetColWidth(newWorksheet, "A:A", 63);
 		sheet->SetRowHeight(newWorksheet, "A:A", 22);
@@ -462,10 +475,14 @@ namespace WodExelSprint {
 		sheet->SetHorAlign(newWorksheet, "B4:D102", XlHAlign::xlHAlignRight);
 
 		for (int row = 4; row <= 10; row += 3) {
-			for (int i = 0; i < countDevelopers; i++)
+			for (int i = 0; i < developers->Count; i++) {
 				sheet->SetStr(newWorksheet, row, 5 + i, developers[i]);
-			for (int i = 0; i < 6; i++)
+				if (developers[i]->StartsWith("[QA]"))
+					sheet->SetColor(newWorksheet, row, 5 + i, colorQA);
+				else
+					sheet->SetColor(newWorksheet, row, 5 + i, color);
 				sheet->SetStr(newWorksheet, ColIntToStr(5 + i) + (row + 1) + ":" + ColIntToStr(5 + i) + (row + 2), "");
+			}
 
 			sheet->SetStr(newWorksheet, row, 2, "Dev");
 			sheet->SetStr(newWorksheet, row + 1, 2, "QA");
@@ -481,9 +498,6 @@ namespace WodExelSprint {
 			sheet->SetBorder(newWorksheet, "B" + (row)+":D" + (row + 2), true);
 			sheet->SetBorder(newWorksheet, "E" + (row)+":J" + (row + 2), true);
 			sheet->SetBorder(newWorksheet, "E" + (row)+":J" + (row), true);
-
-			for (int clm = 5; clm <= 10; clm++)
-				sheet->SetColor(newWorksheet, row, clm, color);
 		}
 		sheet->SetStr(newWorksheet, 4 + 0, 3, "=IF(COUNT(E5:H5)>0,AVERAGE(E5:H5),0)");
 		sheet->SetStr(newWorksheet, 5 + 0, 3, "=IF(COUNT(I5:J5)>0,AVERAGE(I5:J5),0)");
@@ -533,7 +547,7 @@ namespace WodExelSprint {
 			sheet->SetBorder(worksheet, i, 5, false);
 		}
 
-		for (int i = 0; i < countDevelopers; i++)
+		for (int i = 0; i < developers->Count; i++)
 			sheet->SetStr(worksheet, 38 + i, 1, developers[i]);
 
 		sheet->SetBorder(worksheet, "A44:A44", true);
