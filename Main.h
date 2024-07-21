@@ -484,6 +484,8 @@ namespace WodExelSprint {
 		int newCol = 2;
 		for (; ; newCol++) {
 			if (String::IsNullOrEmpty(sheet->GetStr(worksheet, 1, newCol))) {
+				newCol--;
+				sheet->InsertColLeft(worksheet, newCol);
 				sheet->SetStr(worksheet, 1, newCol, newWorksheet->Name);
 				sheet->SetHorAlign(worksheet, 1, newCol, XlHAlign::xlHAlignCenter);
 				sheet->SetVerAlign(worksheet, 1, newCol, XlHAlign::xlHAlignCenter);
