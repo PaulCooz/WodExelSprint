@@ -160,6 +160,7 @@ namespace WodExelSprint {
 			auto textLabel = gcnew System::Windows::Forms::Label();
 			textLabel->Left = 50;
 			textLabel->Top = 20;
+			textLabel->Width = 400;
 			textLabel->Text = text;
 
 			auto textBox = gcnew System::Windows::Forms::TextBox();
@@ -434,10 +435,13 @@ namespace WodExelSprint {
 		sheet->SetFontBold(newWorksheet, "E3:J3", true);
 		sheet->SetBorder(newWorksheet, "E3:J3", true);
 
-		String^ leadName = "";
-		while (String::IsNullOrEmpty(leadName))
-			leadName = ShowInputDialog("enter lead name:", "input");
-		sheet->SetStr(newWorksheet, 4, 5, leadName);
+		int countDevelopers = Int32::Parse(ShowInputDialog("enter count or developers:", "input"));
+		List<String^>^ developers = gcnew List<String^>();
+		for (int i = 0; i < countDevelopers; i++)
+			developers->Add(ShowInputDialog("enter developer #" + (i + 1) + " name:", "input"));
+
+		for (int i = 0; i < countDevelopers; i++)
+			sheet->SetStr(newWorksheet, 4, 5 + i, developers[i]);
 
 		auto colorHtml = ShowInputDialog("enter color as html #RRGGBB", "input");
 		auto color = System::Drawing::ColorTranslator::FromHtml(colorHtml);
@@ -518,7 +522,9 @@ namespace WodExelSprint {
 			sheet->SetBorder(worksheet, i, 4, false);
 			sheet->SetBorder(worksheet, i, 5, false);
 		}
-		sheet->SetStr(worksheet, 38, 1, leadName);
+
+		for (int i = 0; i < countDevelopers; i++)
+			sheet->SetStr(worksheet, 38 + i, 1, developers[i]);
 
 		sheet->SetBorder(worksheet, "A44:A44", true);
 		sheet->SetBorder(worksheet, "B44:B44", true);
