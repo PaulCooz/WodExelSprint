@@ -418,15 +418,15 @@ namespace WodExelSprint {
 		sheet->SetBorder(newWorksheet, "A2:A3", true);
 		sheet->SetStr(newWorksheet, "B2:C2", "Estimated SP:");
 		sheet->SetStr(newWorksheet, 2, 4, "=SUMIFS('" + newWorksheet->Name + "'!$D$4:$D$102, '" + newWorksheet->Name + "'!$B$4:$B$102, \"Dev\")");
-		sheet->SetFontBold(newWorksheet, "B2:C2", true);
+		sheet->SetFontBold(newWorksheet, "B2:D2", true);
 		sheet->SetBorder(newWorksheet, "B2:D2", true);
 		sheet->SetStr(newWorksheet, "E2:F2", "Actual focus factor:");
 		sheet->SetStr(newWorksheet, "G2:G2", "='Focus factor'!H55");
-		sheet->SetFontBold(newWorksheet, "E2:F2", true);
+		sheet->SetFontBold(newWorksheet, "E2:G2", true);
 		sheet->SetBorder(newWorksheet, "E2:G2", true);
 		sheet->SetStr(newWorksheet, "H2:I2", "Unused velocity:");
 		sheet->SetStr(newWorksheet, "J2:J2", "='Focus factor'!H56");
-		sheet->SetFontBold(newWorksheet, "H2:I2", true);
+		sheet->SetFontBold(newWorksheet, "H2:J2", true);
 		sheet->SetBorder(newWorksheet, "H2:J2", true);
 		sheet->SetStr(newWorksheet, "B3:D3", "Total estimation");
 		sheet->SetFontBold(newWorksheet, "B3:D3", true);
@@ -452,15 +452,14 @@ namespace WodExelSprint {
 
 		sheet->SetHorAlign(newWorksheet, "A1:J12", XlHAlign::xlHAlignCenter);
 		sheet->SetVerAlign(newWorksheet, "A1:J12", XlHAlign::xlHAlignCenter);
+		sheet->SetHorAlign(newWorksheet, "B4:D102", XlHAlign::xlHAlignRight);
 
 		for (int row = 4; row <= 10; row += 3) {
 			sheet->SetStr(newWorksheet, row, 2, "Dev");
 			sheet->SetStr(newWorksheet, row + 1, 2, "QA");
 
-			auto totalRange = "B" + (row + 2) + ":C" + (row + 2);
-			sheet->SetStr(newWorksheet, totalRange, "Total");
-			sheet->SetFontBold(newWorksheet, totalRange, true);
-			sheet->SetHorAlign(newWorksheet, totalRange, XlHAlign::xlHAlignRight);
+			sheet->SetStr(newWorksheet, "B" + (row + 2) + ":C" + (row + 2), "Total");
+			sheet->SetFontBold(newWorksheet, "B" + (row + 2) + ":D" + (row + 2), true);
 			sheet->SetStr(newWorksheet, row + 2, 4, "=SUM(" + "D" + row + ":D" + (row + 1) + ")");
 
 			auto storyRange = "A" + (row)+":A" + (row + 2);
@@ -502,11 +501,8 @@ namespace WodExelSprint {
 		sheet->SetStr(worksheet, 37, 1, newWorksheet->Name);
 		sheet->SetBorder(worksheet, 37, 1, true);
 		sheet->SetStr(worksheet, 37, 2, "Focus factor");
-		sheet->SetFontBold(worksheet, 37, 2, true);
 		sheet->SetStr(worksheet, 37, 3, "Velocity");
-		sheet->SetFontBold(worksheet, 37, 3, true);
 		sheet->SetStr(worksheet, "D37:E37", "Absence");
-		sheet->SetFontBold(worksheet, "D37:E37", true);
 		sheet->SetColor(worksheet, 37, 1, color);
 		for (int i = 38; i < 38 + 6; i++) {
 			sheet->InsertRowUp(worksheet, i);
@@ -535,7 +531,10 @@ namespace WodExelSprint {
 		sheet->SetBorder(worksheet, "B38:B43", true);
 		sheet->SetBorder(worksheet, "C38:C43", true);
 		sheet->SetBorder(worksheet, "D38:E43", true);
-		sheet->SetHorAlign(worksheet, "A37:E43", XlHAlign::xlHAlignCenter);
+		sheet->SetFontBold(worksheet, "A37:D37", true);
+		sheet->SetHorAlign(worksheet, "A37:A37", XlHAlign::xlHAlignRight);
+		sheet->SetHorAlign(worksheet, "B37:E37", XlHAlign::xlHAlignCenter);
+		sheet->SetHorAlign(worksheet, "A38:C43", XlHAlign::xlHAlignRight);
 		sheet->SetVerAlign(worksheet, "A37:E43", XlHAlign::xlHAlignCenter);
 
 		sheet->InsertColLeft(worksheet, 6);
