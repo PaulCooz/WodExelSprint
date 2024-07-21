@@ -491,6 +491,9 @@ namespace WodExelSprint {
 			sheet->SetFontBold(newWorksheet, "B" + (row + 2) + ":D" + (row + 2), true);
 			sheet->SetStr(newWorksheet, row + 2, 4, "=SUM(" + "D" + row + ":D" + (row + 1) + ")");
 
+			sheet->SetStr(newWorksheet, row, 3, "=IF(COUNT(E" + (row + 1) + ":H" + (row + 1) + ")>0,AVERAGE(E" + (row + 1) + ":H" + (row + 1) + "),0)");
+			sheet->SetStr(newWorksheet, row + 1, 3, "=IF(COUNT(I" + (row + 1) + ":J" + (row + 1) + ")>0,AVERAGE(I" + (row + 1) + ":J" + (row + 1) + "),0)");
+
 			auto storyRange = "A" + (row)+":A" + (row + 2);
 			sheet->SetColor(newWorksheet, storyRange, color);
 
@@ -499,12 +502,6 @@ namespace WodExelSprint {
 			sheet->SetBorder(newWorksheet, "E" + (row)+":J" + (row + 2), true);
 			sheet->SetBorder(newWorksheet, "E" + (row)+":J" + (row), true);
 		}
-		sheet->SetStr(newWorksheet, 4 + 0, 3, "=IF(COUNT(E5:H5)>0,AVERAGE(E5:H5),0)");
-		sheet->SetStr(newWorksheet, 5 + 0, 3, "=IF(COUNT(I5:J5)>0,AVERAGE(I5:J5),0)");
-		sheet->SetStr(newWorksheet, 4 + 3, 3, "=IF(COUNT(E7:H7)>0,AVERAGE(E7:H7),0)");
-		sheet->SetStr(newWorksheet, 5 + 3, 3, "=IF(COUNT(I7:J7)>0,AVERAGE(I7:J7),0)");
-		sheet->SetStr(newWorksheet, 4 + 6, 3, "=IF(COUNT(E10:H10)>0,AVERAGE(E10:H10),0)");
-		sheet->SetStr(newWorksheet, 5 + 6, 3, "=IF(COUNT(I10:J10)>0,AVERAGE(I10:J10),0)");
 
 		auto worksheet = sheet->GetWorksheetsByName("Focus factor")[0];
 		int newCol = 2;
