@@ -396,6 +396,16 @@ namespace WodExelSprint {
 
 		sheet->SetVisible(true);
 	}
+
+	private: String^ ColIntToStr(int col) {
+		String^ s = "";
+		while (col > 0) {
+			s += (System::Char)('A' + ((col - 1) % ('Z' - 'A' + 1)));
+			col /= ('Z' - 'A' + 1);
+		}
+		return s;
+	}
+
 	private: System::Void AddTeamXlsxButton_Click(System::Object^ sender, System::EventArgs^ e) {
 		OpenFileDialog^ openFileDialog = gcnew OpenFileDialog;
 
@@ -440,9 +450,6 @@ namespace WodExelSprint {
 		for (int i = 0; i < countDevelopers; i++)
 			developers->Add(ShowInputDialog("enter developer #" + (i + 1) + " name:", "input"));
 
-		for (int i = 0; i < countDevelopers; i++)
-			sheet->SetStr(newWorksheet, 4, 5 + i, developers[i]);
-
 		auto colorHtml = ShowInputDialog("enter color as html #RRGGBB", "input");
 		auto color = System::Drawing::ColorTranslator::FromHtml(colorHtml);
 
@@ -455,6 +462,11 @@ namespace WodExelSprint {
 		sheet->SetHorAlign(newWorksheet, "B4:D102", XlHAlign::xlHAlignRight);
 
 		for (int row = 4; row <= 10; row += 3) {
+			for (int i = 0; i < countDevelopers; i++)
+				sheet->SetStr(newWorksheet, row, 5 + i, developers[i]);
+			for (int i = 0; i < 6; i++)
+				sheet->SetStr(newWorksheet, ColIntToStr(5 + i) + (row + 1) + ":" + ColIntToStr(5 + i) + (row + 2), "");
+
 			sheet->SetStr(newWorksheet, row, 2, "Dev");
 			sheet->SetStr(newWorksheet, row + 1, 2, "QA");
 
@@ -512,7 +524,7 @@ namespace WodExelSprint {
 		for (int i = 38; i < 38 + 6; i++) {
 			sheet->SetStr(worksheet, "D" + i + ":E" + i, "");
 			sheet->SetStr(worksheet, i, 2, "=C" + i + "/$B$2");
-			sheet->SetStr(worksheet, i, 3, "0");
+			sheet->SetStr(worksheet, i, 3, i == 38 ? "0" : "9");
 
 			sheet->SetBorder(worksheet, i, 1, false);
 			sheet->SetBorder(worksheet, i, 2, false);
