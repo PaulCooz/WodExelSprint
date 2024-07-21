@@ -462,8 +462,10 @@ namespace WodExelSprint {
 			}
 		}
 
-		auto colorHtml = ShowInputDialog("enter color as html #RRGGBB", "input");
-		auto color = System::Drawing::ColorTranslator::FromHtml(colorHtml);
+		auto colorDialog = gcnew ColorDialog();
+		System::Drawing::Color color;
+		if (colorDialog->ShowDialog() == System::Windows::Forms::DialogResult::OK)
+			color = colorDialog->Color;
 		auto colorQA = System::Drawing::Color::FromArgb(255, 217, 102);
 
 		sheet->SetColWidth(newWorksheet, "A:A", 63);
