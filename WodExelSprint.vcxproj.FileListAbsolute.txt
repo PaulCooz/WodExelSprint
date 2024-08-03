@@ -1,0 +1,8 @@
+D:\Works\WodExelSprint\x64\Release\WodExelSprint.vcxproj.AssemblyReference.cache
+D:\Works\WodExelSprint\x64\Release\WodExelSprint.vcxproj.SuggestedBindingRedirects.cache
+D:\Works\WodExelSprint\x64\Release\WodExelSprint.Main.resources
+D:\Works\WodExelSprint\x64\Release\WodExelSprint.vcxproj.GenerateResource.cache
+D:\Works\WodExelSprint\x64\Release\WodExelSprint.vcxproj.CopyComplete
+D:\Works\WodExelSprint\x64\Release\WodExelSprint.exe
+D:\Works\WodExelSprint\x64\Release\Interop.Microsoft.Office.Interop.Excel.1.9.dll
+D:\Works\WodExelSprint\x64\Release\stdole.dll
