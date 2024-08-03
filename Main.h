@@ -572,8 +572,8 @@ namespace WodExelSprint {
 		sheet->SetStr(worksheet, 53, 6, "=F52/F49");
 		sheet->SetStr(worksheet, 54, 6, "=F51-F52");
 
-		sheet->SetStr(newWorksheet, "G2:G2", "='Focus factor'!G55");
-		sheet->SetStr(newWorksheet, "J2:J2", "='Focus factor'!G56");
+		sheet->SetStr(newWorksheet, "G2:G2", "='Sprint'!F53");
+		sheet->SetStr(newWorksheet, "J2:J2", "='Sprint'!F54");
 
 		sheet->SetVisible(true);
 	}
