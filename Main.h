@@ -420,6 +420,32 @@ namespace WodExelSprint {
 		auto sheet = gcnew Sheet(openFileDialog->FileName);
 		auto newWorksheet = sheet->AddWorksheet(2);
 		newWorksheet->Name = ShowInputDialog("enter team name:", "input");
+
+		List<String^>^ developers = gcnew List<String^>();
+		auto countQA = 0;
+		{
+			int countDevelopers = Int32::Parse(ShowInputDialog("enter count or developers:", "input"));
+
+			for (int i = 0; i < countDevelopers; i++)
+				developers->Add("");
+
+			int front = 0;
+			int back = developers->Count - 1;
+			for (int i = 0; i < developers->Count; i++) {
+				auto name = ShowInputDialog("enter developer #" + (i + 1) + " name:", "input");
+				if (name->StartsWith("[QA]"))
+				{
+					developers[back--] = name;
+					countQA++;
+				}
+				else
+				{
+					developers[front++] = name;
+				}
+			}
+		}
+		auto lastColLetter = ColIntToStr(5 + developers->Count - 1);
+
 		sheet->SetStr(newWorksheet, "A1:J1", newWorksheet->Name + " planning table");
 		sheet->SetFontBold(newWorksheet, "A1:J1", true);
 		sheet->SetBorder(newWorksheet, "A1:J1", true);
@@ -443,23 +469,6 @@ namespace WodExelSprint {
 		sheet->SetFontBold(newWorksheet, "E3:J3", true);
 		sheet->SetBorder(newWorksheet, "E3:J3", true);
 
-		List<String^>^ developers = gcnew List<String^>();
-		for (int i = 0; i < 6; i++)
-			developers->Add("");
-
-		{
-			int countDevelopers = Int32::Parse(ShowInputDialog("enter count or developers:", "input"));
-			int front = 0;
-			int back = developers->Count - 1;
-			for (int i = 0; i < countDevelopers; i++) {
-				auto name = ShowInputDialog("enter developer #" + (i + 1) + " name:", "input");
-				if (name->StartsWith("[QA]"))
-					developers[back--] = name;
-				else
-					developers[front++] = name;
-			}
-		}
-
 		auto colorDialog = gcnew ColorDialog();
 		System::Drawing::Color color;
 		if (colorDialog->ShowDialog() == System::Windows::Forms::DialogResult::OK)
@@ -470,8 +479,8 @@ namespace WodExelSprint {
 		sheet->SetRowHeight(newWorksheet, "A:A", 22);
 		sheet->SetFontBold(newWorksheet, 1, 1, true);
 
-		sheet->SetHorAlign(newWorksheet, "A1:J12", XlHAlign::xlHAlignCenter);
-		sheet->SetVerAlign(newWorksheet, "A1:J12", XlHAlign::xlHAlignCenter);
+		sheet->SetHorAlign(newWorksheet, "A1:" + lastColLetter + "12", XlHAlign::xlHAlignCenter);
+		sheet->SetVerAlign(newWorksheet, "A1:" + lastColLetter + "12", XlHAlign::xlHAlignCenter);
 		sheet->SetHorAlign(newWorksheet, "B4:D102", XlHAlign::xlHAlignRight);
 
 		for (int row = 4; row <= 10; row += 3) {
@@ -491,16 +500,18 @@ namespace WodExelSprint {
 			sheet->SetFontBold(newWorksheet, "B" + (row + 2) + ":D" + (row + 2), true);
 			sheet->SetStr(newWorksheet, row + 2, 4, "=SUM(" + "D" + row + ":D" + (row + 1) + ")");
 
-			sheet->SetStr(newWorksheet, row, 3, "=IF(COUNT(E" + (row + 1) + ":H" + (row + 1) + ")>0,AVERAGE(E" + (row + 1) + ":H" + (row + 1) + "),0)");
-			sheet->SetStr(newWorksheet, row + 1, 3, "=IF(COUNT(I" + (row + 1) + ":J" + (row + 1) + ")>0,AVERAGE(I" + (row + 1) + ":J" + (row + 1) + "),0)");
+			auto lastNotQACol = ColIntToStr(5 + (developers->Count - countQA - 1));
+			auto firstQACol = ColIntToStr(5 + (developers->Count - countQA + 1));
+			sheet->SetStr(newWorksheet, row, 3, "=IF(COUNT(E" + (row + 1) + ":" + lastNotQACol + (row + 1) + ")>0,AVERAGE(E" + (row + 1) + ":" + lastNotQACol + (row + 1) + "),0)");
+			sheet->SetStr(newWorksheet, row + 1, 3, "=IF(COUNT(" + firstQACol + (row + 1) + ":" + lastColLetter + (row + 1) + ")>0,AVERAGE(" + firstQACol + (row + 1) + ":" + lastColLetter + (row + 1) + "),0)");
 
 			auto storyRange = "A" + (row)+":A" + (row + 2);
 			sheet->SetColor(newWorksheet, storyRange, color);
 
 			sheet->SetBorder(newWorksheet, storyRange, true);
 			sheet->SetBorder(newWorksheet, "B" + (row)+":D" + (row + 2), true);
-			sheet->SetBorder(newWorksheet, "E" + (row)+":J" + (row + 2), true);
-			sheet->SetBorder(newWorksheet, "E" + (row)+":J" + (row), true);
+			sheet->SetBorder(newWorksheet, "E" + (row)+":" + lastColLetter + (row + 2), true);
+			sheet->SetBorder(newWorksheet, "E" + (row)+":" + lastColLetter + (row), true);
 		}
 
 		auto worksheet = sheet->GetWorksheetsByName("Focus factor")[0];
@@ -529,10 +540,10 @@ namespace WodExelSprint {
 		sheet->SetStr(worksheet, 37, 3, "Velocity");
 		sheet->SetStr(worksheet, "D37:E37", "Absence");
 		sheet->SetColor(worksheet, 37, 1, color);
-		for (int i = 38; i < 38 + 6; i++) {
+		for (int i = 38; i < 38 + developers->Count; i++) {
 			sheet->InsertRowUp(worksheet, i);
 		}
-		for (int i = 38; i < 38 + 6; i++) {
+		for (int i = 38; i < 38 + developers->Count; i++) {
 			sheet->SetStr(worksheet, "D" + i + ":E" + i, "");
 			sheet->SetStr(worksheet, i, 2, "=C" + i + "/$B$2");
 			sheet->SetStr(worksheet, i, 3, i == 38 ? "0" : "9");
@@ -547,33 +558,40 @@ namespace WodExelSprint {
 		for (int i = 0; i < developers->Count; i++)
 			sheet->SetStr(worksheet, 38 + i, 1, developers[i]);
 
-		sheet->SetBorder(worksheet, "A44:A44", true);
-		sheet->SetBorder(worksheet, "B44:B44", true);
-		sheet->SetBorder(worksheet, "C44:C44", true);
-		sheet->SetBorder(worksheet, "D44:E44", true);
+		auto prelastRowNum = "" + (38 + developers->Count - 1);
+		auto lastRowNum = "" + (38 + developers->Count);
+		sheet->SetBorder(worksheet, "A" + lastRowNum + ":A" + lastRowNum, true);
+		sheet->SetBorder(worksheet, "B" + lastRowNum + ":B" + lastRowNum, true);
+		sheet->SetBorder(worksheet, "C" + lastRowNum + ":C" + lastRowNum, true);
+		sheet->SetBorder(worksheet, "D" + lastRowNum + ":E" + lastRowNum, true);
 
-		sheet->SetBorder(worksheet, "A38:A43", true);
-		sheet->SetBorder(worksheet, "B38:B43", true);
-		sheet->SetBorder(worksheet, "C38:C43", true);
-		sheet->SetBorder(worksheet, "D38:E43", true);
+		sheet->SetBorder(worksheet, "A38:A" + prelastRowNum, true);
+		sheet->SetBorder(worksheet, "B38:B" + prelastRowNum, true);
+		sheet->SetBorder(worksheet, "C38:C" + prelastRowNum, true);
+		sheet->SetBorder(worksheet, "D38:E" + prelastRowNum, true);
 		sheet->SetFontBold(worksheet, "A37:D37", true);
 		sheet->SetHorAlign(worksheet, "A37:A37", XlHAlign::xlHAlignRight);
 		sheet->SetHorAlign(worksheet, "B37:E37", XlHAlign::xlHAlignCenter);
-		sheet->SetHorAlign(worksheet, "A38:C43", XlHAlign::xlHAlignRight);
-		sheet->SetVerAlign(worksheet, "A37:E43", XlHAlign::xlHAlignCenter);
+		sheet->SetHorAlign(worksheet, "A38:C" + prelastRowNum, XlHAlign::xlHAlignRight);
+		sheet->SetVerAlign(worksheet, "A37:E" + prelastRowNum, XlHAlign::xlHAlignCenter);
+
+		auto totalStatRow = 1;
+		while (!String::Equals(sheet->GetStr(worksheet, totalStatRow, 1), "Available human days:"))
+			totalStatRow++;
+		totalStatRow--;
 
 		sheet->InsertColLeft(worksheet, 6);
-		sheet->SetColor(worksheet, 48, 6, color);
-		sheet->SetStr(worksheet, 48, 6, newWorksheet->Name);
-		sheet->SetStr(worksheet, 49, 6, "=SUM(C38:C43)");
-		sheet->SetStr(worksheet, 50, 6, "='Focus factor'!G56");
-		sheet->SetStr(worksheet, 51, 6, "=ROUND(F49*F50, 0)");
-		sheet->SetStr(worksheet, 52, 6, "='" + newWorksheet->Name + "'!D2");
-		sheet->SetStr(worksheet, 53, 6, "=F52/F49");
-		sheet->SetStr(worksheet, 54, 6, "=F51-F52");
+		sheet->SetColor(worksheet, totalStatRow, 6, color);
+		sheet->SetStr(worksheet, totalStatRow, 6, newWorksheet->Name);
+		sheet->SetStr(worksheet, totalStatRow + 1, 6, "=SUM(C38:C" + prelastRowNum + ")");
+		sheet->SetStr(worksheet, totalStatRow + 2, 6, "='Focus factor'!G56");
+		sheet->SetStr(worksheet, totalStatRow + 3, 6, "=ROUND(F" + (totalStatRow + 1) + "*F" + (totalStatRow + 2) + ", 0)");
+		sheet->SetStr(worksheet, totalStatRow + 4, 6, "='" + newWorksheet->Name + "'!D2");
+		sheet->SetStr(worksheet, totalStatRow + 5, 6, "=F" + (totalStatRow + 4) + "/F" + (totalStatRow + 1));
+		sheet->SetStr(worksheet, totalStatRow + 6, 6, "=F" + (totalStatRow + 3) + "-F" + (totalStatRow + 4));
 
-		sheet->SetStr(newWorksheet, "G2:G2", "='Sprint'!F53");
-		sheet->SetStr(newWorksheet, "J2:J2", "='Sprint'!F54");
+		sheet->SetStr(newWorksheet, "G2:G2", "='Sprint'!F" + (totalStatRow + 5));
+		sheet->SetStr(newWorksheet, "J2:J2", "='Sprint'!F" + (totalStatRow + 6));
 
 		sheet->SetVisible(true);
 	}
