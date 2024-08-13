@@ -130,16 +130,23 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AddTeamForm.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Sheet.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AddTeamForm.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
     <ClInclude Include="Main.h">
       <FileType>CppForm</FileType>
     </ClInclude>
     <ClInclude Include="Sheet.h" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="AddTeamForm.resx">
+      <DependentUpon>AddTeamForm.h</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Main.resx">
       <DependentUpon>Main.h</DependentUpon>
     </EmbeddedResource>

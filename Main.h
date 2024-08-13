@@ -2,6 +2,7 @@
 
 #include "Sheet.h"
 #include <algorithm>
+#include "AddTeamForm.h"
 
 namespace WodExelSprint {
 	using namespace System;
@@ -417,33 +418,20 @@ namespace WodExelSprint {
 		if (openFileDialog->ShowDialog() != System::Windows::Forms::DialogResult::OK)
 			return;
 
+		auto addTeam = gcnew AddTeamForm();
+		addTeam->ShowDialog();
+
 		auto sheet = gcnew Sheet(openFileDialog->FileName);
 		auto newWorksheet = sheet->AddWorksheet(2);
-		newWorksheet->Name = ShowInputDialog("enter team name:", "input");
+		newWorksheet->Name = addTeam->teamName;
 
-		List<String^>^ developers = gcnew List<String^>();
+		List<String^>^ developers = addTeam->GetDevelopers();
 		auto countQA = 0;
-		{
-			int countDevelopers = Int32::Parse(ShowInputDialog("enter count or developers:", "input"));
-
-			for (int i = 0; i < countDevelopers; i++)
-				developers->Add("");
-
-			int front = 0;
-			int back = developers->Count - 1;
-			for (int i = 0; i < developers->Count; i++) {
-				auto name = ShowInputDialog("enter developer #" + (i + 1) + " name:", "input");
-				if (name->StartsWith("[QA]"))
-				{
-					developers[back--] = name;
-					countQA++;
-				}
-				else
-				{
-					developers[front++] = name;
-				}
-			}
+		for (int i = 0; i < developers->Count; i++) {
+			if (developers[i]->StartsWith("[QA]"))
+				countQA++;
 		}
+
 		auto lastColLetter = ColIntToStr(5 + developers->Count - 1);
 
 		sheet->SetStr(newWorksheet, "A1:J1", newWorksheet->Name + " planning table");
@@ -469,10 +457,7 @@ namespace WodExelSprint {
 		sheet->SetFontBold(newWorksheet, "E3:J3", true);
 		sheet->SetBorder(newWorksheet, "E3:J3", true);
 
-		auto colorDialog = gcnew ColorDialog();
-		System::Drawing::Color color;
-		if (colorDialog->ShowDialog() == System::Windows::Forms::DialogResult::OK)
-			color = colorDialog->Color;
+		System::Drawing::Color color = addTeam->color;
 		auto colorQA = System::Drawing::Color::FromArgb(255, 217, 102);
 
 		sheet->SetColWidth(newWorksheet, "A:A", 63);
