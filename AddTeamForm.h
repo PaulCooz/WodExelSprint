@@ -43,6 +43,10 @@ namespace WodExelSprint {
 	private: System::Windows::Forms::Button^ button1;
 	private: System::Windows::Forms::Button^ button2;
 	private: System::Windows::Forms::DataGridView^ dataGridView1;
+	private: System::Windows::Forms::Button^ append;
+	private: System::Windows::Forms::Button^ pop_back;
+
+
 
 
 
@@ -73,6 +77,8 @@ namespace WodExelSprint {
 			this->button1 = (gcnew System::Windows::Forms::Button());
 			this->button2 = (gcnew System::Windows::Forms::Button());
 			this->dataGridView1 = (gcnew System::Windows::Forms::DataGridView());
+			this->append = (gcnew System::Windows::Forms::Button());
+			this->pop_back = (gcnew System::Windows::Forms::Button());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dataGridView1))->BeginInit();
 			this->SuspendLayout();
 			// 
@@ -173,14 +179,40 @@ namespace WodExelSprint {
 			this->dataGridView1->RowHeadersDefaultCellStyle = dataGridViewCellStyle2;
 			this->dataGridView1->RowHeadersWidth = 51;
 			this->dataGridView1->RowTemplate->Height = 24;
-			this->dataGridView1->Size = System::Drawing::Size(509, 227);
+			this->dataGridView1->Size = System::Drawing::Size(509, 191);
 			this->dataGridView1->TabIndex = 6;
+			// 
+			// append
+			// 
+			this->append->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 10.2F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->append->Location = System::Drawing::Point(437, 340);
+			this->append->Name = L"append";
+			this->append->Size = System::Drawing::Size(43, 30);
+			this->append->TabIndex = 7;
+			this->append->Text = L"+";
+			this->append->UseVisualStyleBackColor = true;
+			this->append->Click += gcnew System::EventHandler(this, &AddTeamForm::append_Click);
+			// 
+			// pop_back
+			// 
+			this->pop_back->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 10.2F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->pop_back->Location = System::Drawing::Point(486, 340);
+			this->pop_back->Name = L"pop_back";
+			this->pop_back->Size = System::Drawing::Size(41, 30);
+			this->pop_back->TabIndex = 8;
+			this->pop_back->Text = L"-";
+			this->pop_back->UseVisualStyleBackColor = true;
+			this->pop_back->Click += gcnew System::EventHandler(this, &AddTeamForm::pop_back_Click);
 			// 
 			// AddTeamForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(8, 16);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(539, 427);
+			this->Controls->Add(this->pop_back);
+			this->Controls->Add(this->append);
 			this->Controls->Add(this->dataGridView1);
 			this->Controls->Add(this->button2);
 			this->Controls->Add(this->button1);
@@ -224,6 +256,18 @@ namespace WodExelSprint {
 			res->Add(val);
 		}
 		return res;
+	}
+	private: System::Void append_Click(System::Object^ sender, System::EventArgs^ e) {
+		dataGridView1->Rows->Add();
+	}
+	private: System::Void pop_back_Click(System::Object^ sender, System::EventArgs^ e) {
+		auto index = dataGridView1->Rows->Count - 2;
+		auto row = dataGridView1->CurrentCell->RowIndex;
+		if (0 <= row && row <= index)
+			index = row;
+
+		if (index >= 0)
+			dataGridView1->Rows->RemoveAt(index);
 	}
 	};
 }
