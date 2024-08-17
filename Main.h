@@ -432,11 +432,16 @@ namespace WodExelSprint {
 				countQA++;
 		}
 
-		auto lastColLetter = ColIntToStr(5 + developers->Count - 1);
+		auto devWidth = 1;
+		if (developers->Count < 6)
+			devWidth = Math::Max(6 / developers->Count, 2);
 
-		sheet->SetStr(newWorksheet, "A1:J1", newWorksheet->Name + " planning table");
-		sheet->SetFontBold(newWorksheet, "A1:J1", true);
-		sheet->SetBorder(newWorksheet, "A1:J1", true);
+		auto lastColInt = 5 + developers->Count * devWidth - 1;
+		auto lastColLetter = ColIntToStr(lastColInt);
+
+		sheet->SetStr(newWorksheet, "A1:" + lastColLetter + "1", newWorksheet->Name + " planning table");
+		sheet->SetFontBold(newWorksheet, "A1:" + lastColLetter + "1", true);
+		sheet->SetBorder(newWorksheet, "A1:" + lastColLetter + "1", true);
 		sheet->SetStr(newWorksheet, "A2:A3", "User stories");
 		sheet->SetFontBold(newWorksheet, "A2:A3", true);
 		sheet->SetBorder(newWorksheet, "A2:A3", true);
@@ -444,18 +449,21 @@ namespace WodExelSprint {
 		sheet->SetStr(newWorksheet, 2, 4, "=SUMIFS('" + newWorksheet->Name + "'!$D$4:$D$102, '" + newWorksheet->Name + "'!$B$4:$B$102, \"Dev\")");
 		sheet->SetFontBold(newWorksheet, "B2:D2", true);
 		sheet->SetBorder(newWorksheet, "B2:D2", true);
-		sheet->SetStr(newWorksheet, "E2:F2", "Actual focus factor:");
-		sheet->SetFontBold(newWorksheet, "E2:G2", true);
-		sheet->SetBorder(newWorksheet, "E2:G2", true);
-		sheet->SetStr(newWorksheet, "H2:I2", "Unused velocity:");
-		sheet->SetFontBold(newWorksheet, "H2:J2", true);
-		sheet->SetBorder(newWorksheet, "H2:J2", true);
+
+		auto extend = 1 + lastColInt - (5 + 6);
+		sheet->SetStr(newWorksheet, "E2:" + ColIntToStr(6 + extend) + "2", "Actual focus factor:");
+		sheet->SetFontBold(newWorksheet, "E2:" + ColIntToStr(6 + extend + 1) + "2", true);
+		sheet->SetBorder(newWorksheet, "E2:" + ColIntToStr(6 + extend + 1) + "2", true);
+		sheet->SetStr(newWorksheet, ColIntToStr(6 + extend + 2) + "2:" + ColIntToStr(6 + extend + 3) + "2", "Unused velocity:");
+		sheet->SetFontBold(newWorksheet, ColIntToStr(6 + extend + 2) + "2:" + ColIntToStr(6 + extend + 4) + "2", true);
+		sheet->SetBorder(newWorksheet, ColIntToStr(6 + extend + 2) + "2:" + ColIntToStr(6 + extend + 4) + "2", true);
+
 		sheet->SetStr(newWorksheet, "B3:D3", "Total estimation");
 		sheet->SetFontBold(newWorksheet, "B3:D3", true);
 		sheet->SetBorder(newWorksheet, "B3:D3", true);
-		sheet->SetStr(newWorksheet, "E3:J3", "Teammates estimations");
-		sheet->SetFontBold(newWorksheet, "E3:J3", true);
-		sheet->SetBorder(newWorksheet, "E3:J3", true);
+		sheet->SetStr(newWorksheet, "E3:" + lastColLetter + "3", "Teammates estimations");
+		sheet->SetFontBold(newWorksheet, "E3:" + lastColLetter + "3", true);
+		sheet->SetBorder(newWorksheet, "E3:" + lastColLetter + "3", true);
 
 		System::Drawing::Color color = addTeam->color;
 		auto colorQA = System::Drawing::Color::FromArgb(255, 217, 102);
@@ -470,12 +478,15 @@ namespace WodExelSprint {
 
 		for (int row = 4; row <= 10; row += 3) {
 			for (int i = 0; i < developers->Count; i++) {
-				sheet->SetStr(newWorksheet, row, 5 + i, developers[i]);
+				auto col = 5 + i * devWidth;
+				sheet->SetStr(newWorksheet, ColIntToStr(col) + row + ":" + ColIntToStr(col + (devWidth - 1)) + row, developers[i]);
+
+				auto clr = color;
 				if (developers[i]->StartsWith("[QA]"))
-					sheet->SetColor(newWorksheet, row, 5 + i, colorQA);
-				else
-					sheet->SetColor(newWorksheet, row, 5 + i, color);
-				sheet->SetStr(newWorksheet, ColIntToStr(5 + i) + (row + 1) + ":" + ColIntToStr(5 + i) + (row + 2), "");
+					clr = colorQA;
+				sheet->SetColor(newWorksheet, ColIntToStr(col) + row + ":" + ColIntToStr(col + (devWidth - 1)) + row, clr);
+
+				sheet->SetStr(newWorksheet, ColIntToStr(col) + (row + 1) + ":" + ColIntToStr(col + (devWidth - 1)) + (row + 2), "");
 			}
 
 			sheet->SetStr(newWorksheet, row, 2, "Dev");
@@ -485,8 +496,8 @@ namespace WodExelSprint {
 			sheet->SetFontBold(newWorksheet, "B" + (row + 2) + ":D" + (row + 2), true);
 			sheet->SetStr(newWorksheet, row + 2, 4, "=SUM(" + "D" + row + ":D" + (row + 1) + ")");
 
-			auto lastNotQACol = ColIntToStr(5 + (developers->Count - countQA - 1));
-			auto firstQACol = ColIntToStr(5 + (developers->Count - countQA + 1));
+			auto lastNotQACol = ColIntToStr(5 + (developers->Count - countQA) * devWidth - 1);
+			auto firstQACol = ColIntToStr(5 + (developers->Count - countQA) * devWidth);
 			sheet->SetStr(newWorksheet, row, 3, "=IF(COUNT(E" + (row + 1) + ":" + lastNotQACol + (row + 1) + ")>0,AVERAGE(E" + (row + 1) + ":" + lastNotQACol + (row + 1) + "),0)");
 			sheet->SetStr(newWorksheet, row + 1, 3, "=IF(COUNT(" + firstQACol + (row + 1) + ":" + lastColLetter + (row + 1) + ")>0,AVERAGE(" + firstQACol + (row + 1) + ":" + lastColLetter + (row + 1) + "),0)");
 
@@ -575,8 +586,8 @@ namespace WodExelSprint {
 		sheet->SetStr(worksheet, totalStatRow + 5, 6, "=F" + (totalStatRow + 4) + "/F" + (totalStatRow + 1));
 		sheet->SetStr(worksheet, totalStatRow + 6, 6, "=F" + (totalStatRow + 3) + "-F" + (totalStatRow + 4));
 
-		sheet->SetStr(newWorksheet, "G2:G2", "='Sprint'!F" + (totalStatRow + 5));
-		sheet->SetStr(newWorksheet, "J2:J2", "='Sprint'!F" + (totalStatRow + 6));
+		sheet->SetStr(newWorksheet, ColIntToStr(6 + extend + 1) + "2:" + ColIntToStr(6 + extend + 1) + "2", "='Sprint'!F" + (totalStatRow + 5));
+		sheet->SetStr(newWorksheet, ColIntToStr(6 + extend + 4) + "2:" + ColIntToStr(6 + extend + 4) + "2", "='Sprint'!F" + (totalStatRow + 6));
 
 		sheet->SetVisible(true);
 	}
