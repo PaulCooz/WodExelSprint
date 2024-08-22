@@ -1,5 +1,6 @@
 D:\Works\WodExelSprint\x64\Release\WodExelSprint.vcxproj.AssemblyReference.cache
 D:\Works\WodExelSprint\x64\Release\WodExelSprint.vcxproj.SuggestedBindingRedirects.cache
+D:\Works\WodExelSprint\x64\Release\WodExelSprint.AddTeamForm.resources
 D:\Works\WodExelSprint\x64\Release\WodExelSprint.Main.resources
 D:\Works\WodExelSprint\x64\Release\WodExelSprint.vcxproj.GenerateResource.cache
 D:\Works\WodExelSprint\x64\Release\WodExelSprint.vcxproj.CopyComplete

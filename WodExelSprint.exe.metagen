@@ -1,3 +1,4 @@
+  WodExelSprint.AddTeamForm.resources - Embedded, ContainedInManifestFile, 
   WodExelSprint.Main.resources - Embedded, ContainedInManifestFile, 
 ImageRuntimeVersion: v4.0.30319
 Assembly WodExelSprint, Version=0.0.*, Culture=Invariant Language (Invariant Country): 
@@ -16,6 +17,14 @@ Assembly System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=
 	hash=None, flags=None
 Assembly System.Xml, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089: 
 	hash=None, flags=None
+Class WodExelSprint.AddTeamForm: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+  :System.Windows.Forms.Form
+    Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+  Fields:
+    System.Drawing.Color color : Public
+    System.String teamName : Public
+  Methods:
+    GetDevelopers(): PrivateScope, Public, HideBySig
 Class WodExelSprint.Main: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
   :System.Windows.Forms.Form
     Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
