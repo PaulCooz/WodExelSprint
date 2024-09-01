@@ -132,6 +132,7 @@
   <ItemGroup>
     <ClCompile Include="AddTeamForm.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="MyForm.cpp" />
     <ClCompile Include="Sheet.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -139,6 +140,9 @@
       <FileType>CppForm</FileType>
     </ClInclude>
     <ClInclude Include="Main.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
+    <ClInclude Include="MovePersonForm.h">
       <FileType>CppForm</FileType>
     </ClInclude>
     <ClInclude Include="Sheet.h" />
@@ -149,6 +153,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Main.resx">
       <DependentUpon>Main.h</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MovePersonForm.resx">
+      <DependentUpon>MovePersonForm.h</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

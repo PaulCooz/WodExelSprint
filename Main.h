@@ -3,6 +3,7 @@
 #include "Sheet.h"
 #include <algorithm>
 #include "AddTeamForm.h"
+#include "MovePersonForm.h"
 
 namespace WodExelSprint {
 	using namespace System;
@@ -26,6 +27,7 @@ namespace WodExelSprint {
 
 	private: System::Windows::Forms::TableLayoutPanel^ TableLayoutPanel;
 	private: System::Windows::Forms::Button^ AddTeamXlsxButton;
+	private: System::Windows::Forms::Button^ MovePersonButton;
 
 	private: System::Windows::Forms::Button^ ValidateXlsxButton;
 	private:
@@ -63,6 +65,7 @@ namespace WodExelSprint {
 			this->ClearXlsxButton = (gcnew System::Windows::Forms::Button());
 			this->TableLayoutPanel = (gcnew System::Windows::Forms::TableLayoutPanel());
 			this->AddTeamXlsxButton = (gcnew System::Windows::Forms::Button());
+			this->MovePersonButton = (gcnew System::Windows::Forms::Button());
 			this->TableLayoutPanel->SuspendLayout();
 			this->SuspendLayout();
 			// 
@@ -75,7 +78,7 @@ namespace WodExelSprint {
 				static_cast<System::Byte>(0)));
 			this->ValidateXlsxButton->Location = System::Drawing::Point(3, 3);
 			this->ValidateXlsxButton->Name = L"ValidateXlsxButton";
-			this->ValidateXlsxButton->Size = System::Drawing::Size(276, 66);
+			this->ValidateXlsxButton->Size = System::Drawing::Size(276, 48);
 			this->ValidateXlsxButton->TabIndex = 0;
 			this->ValidateXlsxButton->Text = L"validate xlsx";
 			this->ValidateXlsxButton->UseVisualStyleBackColor = true;
@@ -88,9 +91,9 @@ namespace WodExelSprint {
 				| System::Windows::Forms::AnchorStyles::Right));
 			this->ClearXlsxButton->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 14, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->ClearXlsxButton->Location = System::Drawing::Point(3, 75);
+			this->ClearXlsxButton->Location = System::Drawing::Point(3, 57);
 			this->ClearXlsxButton->Name = L"ClearXlsxButton";
-			this->ClearXlsxButton->Size = System::Drawing::Size(276, 66);
+			this->ClearXlsxButton->Size = System::Drawing::Size(276, 48);
 			this->ClearXlsxButton->TabIndex = 1;
 			this->ClearXlsxButton->Text = L"clear xlsx";
 			this->ClearXlsxButton->UseVisualStyleBackColor = true;
@@ -108,13 +111,15 @@ namespace WodExelSprint {
 			this->TableLayoutPanel->Controls->Add(this->ValidateXlsxButton, 0, 0);
 			this->TableLayoutPanel->Controls->Add(this->ClearXlsxButton, 0, 1);
 			this->TableLayoutPanel->Controls->Add(this->AddTeamXlsxButton, 0, 2);
+			this->TableLayoutPanel->Controls->Add(this->MovePersonButton, 0, 3);
 			this->TableLayoutPanel->GrowStyle = System::Windows::Forms::TableLayoutPanelGrowStyle::FixedSize;
 			this->TableLayoutPanel->Location = System::Drawing::Point(12, 12);
 			this->TableLayoutPanel->Name = L"TableLayoutPanel";
-			this->TableLayoutPanel->RowCount = 3;
-			this->TableLayoutPanel->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Percent, 33.33333F)));
-			this->TableLayoutPanel->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Percent, 33.33333F)));
-			this->TableLayoutPanel->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Percent, 33.33333F)));
+			this->TableLayoutPanel->RowCount = 4;
+			this->TableLayoutPanel->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Percent, 25)));
+			this->TableLayoutPanel->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Percent, 25)));
+			this->TableLayoutPanel->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Percent, 25)));
+			this->TableLayoutPanel->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Percent, 25)));
 			this->TableLayoutPanel->Size = System::Drawing::Size(282, 218);
 			this->TableLayoutPanel->TabIndex = 2;
 			// 
@@ -125,13 +130,27 @@ namespace WodExelSprint {
 				| System::Windows::Forms::AnchorStyles::Right));
 			this->AddTeamXlsxButton->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 14, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->AddTeamXlsxButton->Location = System::Drawing::Point(3, 147);
+			this->AddTeamXlsxButton->Location = System::Drawing::Point(3, 111);
 			this->AddTeamXlsxButton->Name = L"AddTeamXlsxButton";
-			this->AddTeamXlsxButton->Size = System::Drawing::Size(276, 68);
+			this->AddTeamXlsxButton->Size = System::Drawing::Size(276, 48);
 			this->AddTeamXlsxButton->TabIndex = 2;
 			this->AddTeamXlsxButton->Text = L"add team xlsx";
 			this->AddTeamXlsxButton->UseVisualStyleBackColor = true;
 			this->AddTeamXlsxButton->Click += gcnew System::EventHandler(this, &Main::AddTeamXlsxButton_Click);
+			// 
+			// MovePersonButton
+			// 
+			this->MovePersonButton->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Bottom)
+				| System::Windows::Forms::AnchorStyles::Left)
+				| System::Windows::Forms::AnchorStyles::Right));
+			this->MovePersonButton->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 14));
+			this->MovePersonButton->Location = System::Drawing::Point(3, 165);
+			this->MovePersonButton->Name = L"MovePersonButton";
+			this->MovePersonButton->Size = System::Drawing::Size(276, 50);
+			this->MovePersonButton->TabIndex = 3;
+			this->MovePersonButton->Text = L"move person xlsx";
+			this->MovePersonButton->UseVisualStyleBackColor = true;
+			this->MovePersonButton->Click += gcnew System::EventHandler(this, &Main::MovePersonButton_Click);
 			// 
 			// Main
 			// 
@@ -590,6 +609,11 @@ namespace WodExelSprint {
 		sheet->SetStr(newWorksheet, ColIntToStr(6 + extend + 4) + "2:" + ColIntToStr(6 + extend + 4) + "2", "='Sprint'!F" + (totalStatRow + 6));
 
 		sheet->SetVisible(true);
+	}
+
+	private: System::Void MovePersonButton_Click(System::Object^ sender, System::EventArgs^ e) {
+		auto moveForm = gcnew MovePersonForm();
+		moveForm->ShowDialog();
 	}
 	};
 }
