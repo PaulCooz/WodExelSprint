@@ -612,8 +612,21 @@ namespace WodExelSprint {
 	}
 
 	private: System::Void MovePersonButton_Click(System::Object^ sender, System::EventArgs^ e) {
-		auto moveForm = gcnew MovePersonForm();
+		OpenFileDialog^ openFileDialog = gcnew OpenFileDialog;
+		openFileDialog->InitialDirectory = ".";
+		openFileDialog->Filter = "xlsx files (*.xlsx)|*.xlsx|All files (*.*)|*.*";
+		openFileDialog->FilterIndex = 1;
+		openFileDialog->RestoreDirectory = true;
+		if (openFileDialog->ShowDialog() != System::Windows::Forms::DialogResult::OK)
+			return;
+		auto sheet = gcnew Sheet(openFileDialog->FileName);
+
+		auto moveForm = gcnew MovePersonForm(sheet);
 		moveForm->ShowDialog();
+
+		// TODO
+
+		sheet->SetVisible(true);
 	}
 	};
 }

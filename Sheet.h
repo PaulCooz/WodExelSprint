@@ -35,5 +35,14 @@ namespace WodExelSprint {
 		void Sheet::InsertRowUp(Worksheet^ worksheet, int row);
 		void Sheet::InsertColLeft(Worksheet^ worksheet, int col);
 		void SetVisible(bool value);
+
+		String^ ColIntToStr(int col) {
+			String^ s = "";
+			while (col > 0) {
+				s += (System::Char)('A' + ((col - 1) % ('Z' - 'A' + 1)));
+				col /= ('Z' - 'A' + 1);
+			}
+			return s;
+		}
 	};
 }
