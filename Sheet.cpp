@@ -158,9 +158,24 @@ namespace WodExelSprint {
 		((Range^)worksheet->Rows[row, Type::Missing])->Insert(Type::Missing, Type::Missing);
 	}
 
+	void Sheet::InsertRowDown(Worksheet^ worksheet, int row)
+	{
+		((Range^)worksheet->Rows[row, Type::Missing])->Insert(Type::Missing, XlInsertFormatOrigin::xlFormatFromRightOrBelow);
+	}
+
 	void Sheet::InsertColLeft(Worksheet^ worksheet, int col)
 	{
 		((Range^)worksheet->Columns[col, Type::Missing])->Insert(XlInsertShiftDirection::xlShiftToRight, XlInsertFormatOrigin::xlFormatFromRightOrBelow);
+	}
+
+	void Sheet::DeleteCol(Worksheet^ worksheet, int col)
+	{
+		((Range^)worksheet->Columns[col, Type::Missing])->Delete(XlDeleteShiftDirection::xlShiftToLeft);
+	}
+
+	void Sheet::DeleteRow(Worksheet^ worksheet, int row)
+	{
+		((Range^)worksheet->Rows[row, Type::Missing])->Delete(XlDeleteShiftDirection::xlShiftUp);
 	}
 
 	void Sheet::SetVisible(bool value)

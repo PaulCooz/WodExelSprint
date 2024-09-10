@@ -232,5 +232,25 @@ namespace WodExelSprint {
 	private: System::Void buttonOk_Click(System::Object^ sender, System::EventArgs^ e) {
 		Close();
 	}
+	public: String^ GetLeftTeam() {
+		return comboBoxLeft->Text;
+	}
+	public: List<String^ >^ GetLeftTeammates() {
+		auto res = gcnew List<String^>();
+		for (auto i = 0; i < dataGridViewLeft->Rows->Count; i++) {
+			res->Add((String^)dataGridViewLeft->Rows[i]->Cells[0]->Value);
+		}
+		return res;
+	}
+	public: String^ GetRightTeam() {
+		return comboBoxRight->Text;
+	}
+	public: List<String^ >^ GetRightTeammates() {
+		auto res = gcnew List<String^>();
+		for (auto i = 0; i < dataGridViewRight->Rows->Count; i++) {
+			res->Add((String^)dataGridViewRight->Rows[i]->Cells[0]->Value);
+		}
+		return res;
+	}
 	};
 }

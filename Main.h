@@ -611,6 +611,91 @@ namespace WodExelSprint {
 		sheet->SetVisible(true);
 	}
 
+	private: void DeleteExtraTeammates(Sheet^ sheet, String^ team, List<String^ >^ teammates) {
+		auto worksheet = sheet->GetWorksheetsByName(team)[0];
+
+		for (auto col = 5; ; col++) {
+			auto value = sheet->GetStr(worksheet, 4, col);
+			if (String::IsNullOrEmpty(value))
+				break;
+			if (!teammates->Contains(value)) {
+				sheet->DeleteCol(worksheet, col);
+				col--;
+			}
+		}
+
+		worksheet = sheet->GetWorksheetsByName("Sprint")[0];
+		String^ lastTeam = "";
+		String^ TeamNameTemp = "(.*team)|(DevOps)";
+		for (auto row = 4; ; row++) {
+			auto value = sheet->GetStr(worksheet, row, 1);
+			if (String::IsNullOrEmpty(value))
+				break;
+			auto isTeam = Regex::IsMatch(value, TeamNameTemp);
+			if (isTeam) {
+				lastTeam = value;
+				continue;
+			}
+			if (lastTeam == team) {
+				if (!teammates->Contains(value)) {
+					sheet->DeleteRow(worksheet, row);
+					row--;
+				}
+			}
+		}
+	}
+
+	private: void AppendNewTeammates(Sheet^ sheet, String^ team, List<String^ >^ teammates) {
+		auto worksheet = sheet->GetWorksheetsByName(team)[0];
+		auto current = gcnew List<String^ >();
+		auto col = 5;
+		for (; ; col++) {
+			auto value = sheet->GetStr(worksheet, 4, col);
+			if (String::IsNullOrEmpty(value))
+				break;
+			current->Add(value);
+		}
+
+		auto newTeammates = gcnew List<String^ >();
+		for (auto i = 0; i < teammates->Count; i++) {
+			if (!current->Contains(teammates[i])) {
+				newTeammates->Add(teammates[i]);
+			}
+		}
+
+		auto lastCol = col - 1;
+		for (auto i = 0; i < newTeammates->Count; i++) {
+			sheet->InsertColLeft(worksheet, lastCol);
+			sheet->SetStr(worksheet, 4, lastCol, newTeammates[i]);
+			for (auto row = 4; ; row += 3) {
+				if (String::IsNullOrEmpty(sheet->GetStr(worksheet, row, 2)))
+					break;
+				sheet->SetStr(worksheet, row, lastCol, newTeammates[i]);
+			}
+		}
+
+		worksheet = sheet->GetWorksheetsByName("Sprint")[0];
+		String^ lastTeam = "";
+		String^ TeamNameTemp = "(.*team)|(DevOps)";
+		for (auto row = 4; ; row++) {
+			auto value = sheet->GetStr(worksheet, row, 1);
+			if (String::IsNullOrEmpty(value))
+				break;
+			auto isTeam = Regex::IsMatch(value, TeamNameTemp);
+			if (isTeam) {
+				lastTeam = value;
+				continue;
+			}
+			if (lastTeam == team) {
+				for (auto i = 0; i < newTeammates->Count; i++) {
+					sheet->InsertRowUp(worksheet, row + 1);
+					sheet->SetStr(worksheet, row + 1, 1, newTeammates[i]);
+				}
+				break;
+			}
+		}
+	}
+
 	private: System::Void MovePersonButton_Click(System::Object^ sender, System::EventArgs^ e) {
 		OpenFileDialog^ openFileDialog = gcnew OpenFileDialog;
 		openFileDialog->InitialDirectory = ".";
@@ -624,7 +709,15 @@ namespace WodExelSprint {
 		auto moveForm = gcnew MovePersonForm(sheet);
 		moveForm->ShowDialog();
 
-		// TODO
+		auto teamLeft = moveForm->GetLeftTeam();
+		auto teammatesLeft = moveForm->GetLeftTeammates();
+		DeleteExtraTeammates(sheet, teamLeft, teammatesLeft);
+		AppendNewTeammates(sheet, teamLeft, teammatesLeft);
+
+		auto teamRight = moveForm->GetRightTeam();
+		auto teammatesRight = moveForm->GetRightTeammates();
+		DeleteExtraTeammates(sheet, teamRight, teammatesRight);
+		AppendNewTeammates(sheet, teamRight, teammatesRight);
 
 		sheet->SetVisible(true);
 	}

@@ -33,7 +33,10 @@ namespace WodExelSprint {
 		void Sheet::SetBorder(Worksheet^ worksheet, int row, int clm, bool value);
 		void Sheet::SetBorder(Worksheet^ worksheet, String^ range, bool value);
 		void Sheet::InsertRowUp(Worksheet^ worksheet, int row);
+		void Sheet::InsertRowDown(Worksheet^ worksheet, int row);
 		void Sheet::InsertColLeft(Worksheet^ worksheet, int col);
+		void Sheet::DeleteCol(Worksheet^ worksheet, int col);
+		void Sheet::DeleteRow(Worksheet^ worksheet, int row);
 		void SetVisible(bool value);
 
 		String^ ColIntToStr(int col) {
