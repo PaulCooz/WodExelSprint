@@ -671,6 +671,7 @@ namespace WodExelSprint {
 				if (String::IsNullOrEmpty(sheet->GetStr(worksheet, row, 2)))
 					break;
 				sheet->SetStr(worksheet, row, lastCol, newTeammates[i]);
+				sheet->SetStr(worksheet, "=" + ColIntToStr(lastCol) + (row + 1) + ":" + ColIntToStr(lastCol) + (row + 2), "");
 			}
 		}
 
@@ -690,6 +691,9 @@ namespace WodExelSprint {
 				for (auto i = 0; i < newTeammates->Count; i++) {
 					sheet->InsertRowUp(worksheet, row + 1);
 					sheet->SetStr(worksheet, row + 1, 1, newTeammates[i]);
+					sheet->SetStr(worksheet, row + 1, 2, "=C" + (row + 1) + "/$B$2");
+					sheet->SetStr(worksheet, row + 1, 3, "0");
+					sheet->SetStr(worksheet, "=" + ColIntToStr(4) + (row + 1) + ":" + ColIntToStr(5) + (row + 1), "");
 				}
 				break;
 			}
