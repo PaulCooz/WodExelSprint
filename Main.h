@@ -664,6 +664,8 @@ namespace WodExelSprint {
 		}
 
 		auto lastCol = col - 1;
+		auto color = sheet->GetColor(worksheet, 4, 5);
+		auto colorQA = System::Drawing::Color::FromArgb(255, 217, 102);
 		for (auto i = 0; i < newTeammates->Count; i++) {
 			sheet->InsertColLeft(worksheet, lastCol);
 			sheet->SetStr(worksheet, 4, lastCol, newTeammates[i]);
@@ -672,6 +674,12 @@ namespace WodExelSprint {
 					break;
 				sheet->SetStr(worksheet, row, lastCol, newTeammates[i]);
 				sheet->SetStr(worksheet, "=" + ColIntToStr(lastCol) + (row + 1) + ":" + ColIntToStr(lastCol) + (row + 2), "");
+
+				auto clr = color;
+				if (newTeammates[i]->StartsWith("[QA]"))
+					clr = colorQA;
+				sheet->SetColor(worksheet, row, lastCol, clr);
+
 			}
 		}
 

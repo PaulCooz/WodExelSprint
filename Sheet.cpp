@@ -125,6 +125,11 @@ namespace WodExelSprint {
 		cells->VerticalAlignment = value;
 	}
 
+	Object^ Sheet::GetColor(Worksheet^ worksheet, int row, int clm)
+	{
+		return ((Range^)worksheet->UsedRange->Cells[row, clm])->Interior->Color;
+	}
+
 	void Sheet::SetColor(Worksheet^ worksheet, int row, int clm, Object^ color)
 	{
 		((Range^)worksheet->UsedRange->Cells[row, clm])->Interior->Color = color;
