@@ -679,7 +679,36 @@ namespace WodExelSprint {
 				if (newTeammates[i]->StartsWith("[QA]"))
 					clr = colorQA;
 				sheet->SetColor(worksheet, row, lastCol, clr);
+			}
+		}
 
+		auto lastNotQAColInt = -1;
+		auto firstQAColInt = -1;
+		auto lastColInt = -1;
+		for (auto col = 5; ; col++) {
+			auto teammate = sheet->GetStr(worksheet, 4, col);
+			if (String::IsNullOrEmpty(teammate))
+				break;
+
+			if (teammate->StartsWith("[QA]")) {
+				if (firstQAColInt == -1)
+					firstQAColInt = col;
+			}
+			else {
+				lastNotQAColInt = col;
+			}
+			lastColInt = col;
+		}
+		auto lastColLetter = ColIntToStr(lastColInt);
+		auto firstQACol = ColIntToStr(firstQAColInt);
+		auto lastNotQACol = ColIntToStr(lastNotQAColInt);
+		for (auto i = 0; i < newTeammates->Count; i++) {
+			for (auto row = 4; ; row += 3) {
+				if (String::IsNullOrEmpty(sheet->GetStr(worksheet, row, 2)))
+					break;
+
+				sheet->SetStr(worksheet, row, 3, "=IF(COUNT(E" + (row + 1) + ":" + lastNotQACol + (row + 1) + ")>0,AVERAGE(E" + (row + 1) + ":" + lastNotQACol + (row + 1) + "),0)");
+				sheet->SetStr(worksheet, row + 1, 3, "=IF(COUNT(" + firstQACol + (row + 1) + ":" + lastColLetter + (row + 1) + ")>0,AVERAGE(" + firstQACol + (row + 1) + ":" + lastColLetter + (row + 1) + "),0)");
 			}
 		}
 
