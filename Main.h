@@ -737,6 +737,38 @@ namespace WodExelSprint {
 		}
 	}
 
+	private: void ChangeTeammatesOrder(Sheet^ sheet, String^ team) {
+		auto worksheet = sheet->GetWorksheetsByName(team)[0];
+		auto current = gcnew List<String^ >();
+		auto col = 5;
+		for (; ; col++) {
+			auto value = sheet->GetStr(worksheet, 4, col);
+			if (String::IsNullOrEmpty(value))
+				break;
+			current->Add(value);
+		}
+
+		worksheet = sheet->GetWorksheetsByName("Sprint")[0];
+		String^ lastTeam = "";
+		String^ TeamNameTemp = "(.*team)|(DevOps)";
+		for (auto row = 4; ; row++) {
+			auto value = sheet->GetStr(worksheet, row, 1);
+			if (String::IsNullOrEmpty(value))
+				break;
+			auto isTeam = Regex::IsMatch(value, TeamNameTemp);
+			if (isTeam) {
+				lastTeam = value;
+				continue;
+			}
+			if (lastTeam == team) {
+				for (auto i = 0; i < current->Count; i++) {
+					sheet->SetStr(worksheet, row + i, 1, "='" + team + "'!" + ColIntToStr(5 + i) + "4");
+				}
+				break;
+			}
+		}
+	}
+
 	private: System::Void MovePersonButton_Click(System::Object^ sender, System::EventArgs^ e) {
 		OpenFileDialog^ openFileDialog = gcnew OpenFileDialog;
 		openFileDialog->InitialDirectory = ".";
@@ -754,11 +786,13 @@ namespace WodExelSprint {
 		auto teammatesLeft = moveForm->GetLeftTeammates();
 		DeleteExtraTeammates(sheet, teamLeft, teammatesLeft);
 		AppendNewTeammates(sheet, teamLeft, teammatesLeft);
+		ChangeTeammatesOrder(sheet, teamLeft);
 
 		auto teamRight = moveForm->GetRightTeam();
 		auto teammatesRight = moveForm->GetRightTeammates();
 		DeleteExtraTeammates(sheet, teamRight, teammatesRight);
 		AppendNewTeammates(sheet, teamRight, teammatesRight);
+		ChangeTeammatesOrder(sheet, teamRight);
 
 		sheet->SetVisible(true);
 	}
