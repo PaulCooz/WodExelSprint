@@ -738,17 +738,9 @@ namespace WodExelSprint {
 	}
 
 	private: void ChangeTeammatesOrder(Sheet^ sheet, String^ team) {
-		auto worksheet = sheet->GetWorksheetsByName(team)[0];
 		auto current = gcnew List<String^ >();
-		auto col = 5;
-		for (; ; col++) {
-			auto value = sheet->GetStr(worksheet, 4, col);
-			if (String::IsNullOrEmpty(value))
-				break;
-			current->Add(value);
-		}
-
-		worksheet = sheet->GetWorksheetsByName("Sprint")[0];
+		auto worksheet = sheet->GetWorksheetsByName("Sprint")[0];
+		auto teamRow = -1;
 		String^ lastTeam = "";
 		String^ TeamNameTemp = "(.*team)|(DevOps)";
 		for (auto row = 4; ; row++) {
@@ -761,10 +753,27 @@ namespace WodExelSprint {
 				continue;
 			}
 			if (lastTeam == team) {
-				for (auto i = 0; i < current->Count; i++) {
-					sheet->SetStr(worksheet, row + i, 1, "='" + team + "'!" + ColIntToStr(5 + i) + "4");
-				}
+				if (teamRow == -1)
+					teamRow = row - 1;
+				current->Add(value);
 				break;
+			}
+		}
+
+		worksheet = sheet->GetWorksheetsByName(team)[0];
+		for (auto row = 4; ; row += 3) {
+			auto first = sheet->GetStr(worksheet, row, 5);
+			if (String::IsNullOrEmpty(first))
+				break;
+
+			auto teammate = 0;
+			for (auto col = 5; ; col++) {
+				auto value = sheet->GetStr(worksheet, row, col);
+				if (String::IsNullOrEmpty(value))
+					break;
+
+				sheet->SetStr(worksheet, row, col, "='Sprint'!" + ColIntToStr(1) + (teamRow + 1 + teammate));
+				teammate++;
 			}
 		}
 	}
