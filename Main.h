@@ -778,6 +778,39 @@ namespace WodExelSprint {
 		}
 	}
 
+	private: void RefreshSheetStyles(Sheet^ sheet, String^ team) {
+		auto worksheet = sheet->GetWorksheetsByName(team)[0];
+		for (auto row = 4; ; row += 3) {
+			auto first = sheet->GetStr(worksheet, row, 5);
+			if (String::IsNullOrEmpty(first))
+				break;
+
+			auto firstQACol = -1, lastQACol = -1, lastCol = 5;
+			for (auto col = 5; ; col++) {
+				auto value = sheet->GetStr(worksheet, row, col);
+				if (String::IsNullOrEmpty(value))
+					break;
+
+				sheet->SetBorder(worksheet, row, col, false);
+				lastCol = col;
+
+				if (value->StartsWith("[QA]")) {
+					if (firstQACol == -1)
+						firstQACol = col;
+					lastQACol = col;
+				}
+			}
+
+			if (firstQACol != -1) {
+				sheet->SetBorder(worksheet, ColIntToStr(firstQACol) + row + ":" + ColIntToStr(lastQACol) + row, true);
+				sheet->SetBorder(worksheet, ColIntToStr(5) + row + ":" + ColIntToStr(firstQACol - 1) + row, true);
+			}
+			else {
+				sheet->SetBorder(worksheet, ColIntToStr(5) + row + ":" + ColIntToStr(lastCol) + row, true);
+			}
+		}
+	}
+
 	private: System::Void MovePersonButton_Click(System::Object^ sender, System::EventArgs^ e) {
 		OpenFileDialog^ openFileDialog = gcnew OpenFileDialog;
 		openFileDialog->InitialDirectory = ".";
@@ -796,12 +829,14 @@ namespace WodExelSprint {
 		DeleteExtraTeammates(sheet, teamLeft, teammatesLeft);
 		AppendNewTeammates(sheet, teamLeft, teammatesLeft);
 		ChangeTeammatesOrder(sheet, teamLeft);
+		RefreshSheetStyles(sheet, teamLeft);
 
 		auto teamRight = moveForm->GetRightTeam();
 		auto teammatesRight = moveForm->GetRightTeammates();
 		DeleteExtraTeammates(sheet, teamRight, teammatesRight);
 		AppendNewTeammates(sheet, teamRight, teammatesRight);
 		ChangeTeammatesOrder(sheet, teamRight);
+		RefreshSheetStyles(sheet, teamRight);
 
 		sheet->SetVisible(true);
 	}
