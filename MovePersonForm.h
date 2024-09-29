@@ -215,18 +215,48 @@ namespace WodExelSprint {
 		auto index = dataGridViewLeft->CurrentCell->RowIndex;
 		if (0 <= index && index < dataGridViewLeft->Rows->Count)
 		{
-			auto name = dataGridViewLeft->CurrentCell->Value;
+			auto name = (String^)(dataGridViewLeft->CurrentCell->Value);
 			dataGridViewLeft->Rows->RemoveAt(index);
-			dataGridViewRight->Rows->Add(name);
+
+			if (name->StartsWith("[QA]")) {
+				dataGridViewRight->Rows->Add(name);
+			}
+			else {
+				auto lastNotQA = -1;
+				for (auto i = 0; i < dataGridViewRight->Rows->Count; i++) {
+					auto name = (String^)(dataGridViewRight->Rows[i]->Cells[0]->Value);
+					if (!name->StartsWith("[QA]")) {
+						lastNotQA = i;
+					}
+				}
+				lastNotQA++;
+				dataGridViewRight->Rows->Insert(lastNotQA);
+				dataGridViewRight->Rows[lastNotQA]->Cells[0]->Value = name;
+			}
 		}
 	}
 	private: System::Void buttonToLeft_Click(System::Object^ sender, System::EventArgs^ e) {
 		auto index = dataGridViewRight->CurrentCell->RowIndex;
 		if (0 <= index && index < dataGridViewRight->Rows->Count)
 		{
-			auto name = dataGridViewRight->CurrentCell->Value;
+			auto name = (String^)(dataGridViewRight->CurrentCell->Value);
 			dataGridViewRight->Rows->RemoveAt(index);
-			dataGridViewLeft->Rows->Add(name);
+
+			if (name->StartsWith("[QA]")) {
+				dataGridViewLeft->Rows->Add(name);
+			}
+			else {
+				auto lastNotQA = -1;
+				for (auto i = 0; i < dataGridViewLeft->Rows->Count; i++) {
+					auto name = (String^)(dataGridViewLeft->Rows[i]->Cells[0]->Value);
+					if (!name->StartsWith("[QA]")) {
+						lastNotQA = i;
+					}
+				}
+				lastNotQA++;
+				dataGridViewLeft->Rows->Insert(lastNotQA);
+				dataGridViewLeft->Rows[lastNotQA]->Cells[0]->Value = name;
+			}
 		}
 	}
 	private: System::Void buttonOk_Click(System::Object^ sender, System::EventArgs^ e) {
