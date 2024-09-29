@@ -41,5 +41,10 @@
     <ClInclude Include="MovePersonForm.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="DeletePersonForm.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
   </ItemGroup>
 </Project>

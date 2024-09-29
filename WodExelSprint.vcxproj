@@ -139,6 +139,9 @@
     <ClInclude Include="AddTeamForm.h">
       <FileType>CppForm</FileType>
     </ClInclude>
+    <ClInclude Include="DeletePersonForm.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
     <ClInclude Include="Main.h">
       <FileType>CppForm</FileType>
     </ClInclude>
@@ -150,6 +153,9 @@
   <ItemGroup>
     <EmbeddedResource Include="AddTeamForm.resx">
       <DependentUpon>AddTeamForm.h</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DeletePersonForm.resx">
+      <DependentUpon>DeletePersonForm.h</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Main.resx">
       <DependentUpon>Main.h</DependentUpon>
