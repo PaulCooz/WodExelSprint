@@ -675,29 +675,40 @@ namespace WodExelSprint {
 			current->Add(value);
 		}
 
-		auto newTeammates = gcnew List<String^ >();
-		for (auto i = 0; i < teammates->Count; i++) {
-			if (!current->Contains(teammates[i])) {
-				newTeammates->Add(teammates[i]);
-			}
-		}
-
-		auto lastCol = col - 1;
+		col = 5;
+		auto curr = 0;
 		auto color = sheet->GetColor(worksheet, 4, 5);
 		auto colorQA = System::Drawing::Color::FromArgb(255, 217, 102);
-		for (auto i = 0; i < newTeammates->Count; i++) {
-			sheet->InsertColLeft(worksheet, lastCol);
-			sheet->SetStr(worksheet, 4, lastCol, newTeammates[i]);
+		for (auto i = 0; i < teammates->Count; i++) {
+			auto teammate = teammates[i];
+			if (current[curr] == teammate) {
+				col++;
+				curr++;
+				continue;
+			}
+
+			sheet->InsertColLeft(worksheet, col);
+		}
+		col = 5;
+		curr = 0;
+		for (auto i = 0; i < teammates->Count; i++, col++) {
+			auto teammate = teammates[i];
+			if (current[curr] == teammate) {
+				curr++;
+				continue;
+			}
+
+			sheet->SetStr(worksheet, 4, col, teammate);
 			for (auto row = 4; ; row += 3) {
 				if (String::IsNullOrEmpty(sheet->GetStr(worksheet, row, 2)))
 					break;
-				sheet->SetStr(worksheet, row, lastCol, newTeammates[i]);
-				sheet->SetStr(worksheet, "=" + ColIntToStr(lastCol) + (row + 1) + ":" + ColIntToStr(lastCol) + (row + 2), "");
+				sheet->SetStr(worksheet, row, col, teammate);
+				sheet->SetStr(worksheet, "=" + ColIntToStr(col) + (row + 1) + ":" + ColIntToStr(col) + (row + 2), "");
 
 				auto clr = color;
-				if (newTeammates[i]->StartsWith("[QA]"))
+				if (teammate->StartsWith("[QA]"))
 					clr = colorQA;
-				sheet->SetColor(worksheet, row, lastCol, clr);
+				sheet->SetColor(worksheet, row, col, clr);
 			}
 		}
 
@@ -721,14 +732,14 @@ namespace WodExelSprint {
 		auto lastColLetter = ColIntToStr(lastColInt);
 		auto firstQACol = ColIntToStr(firstQAColInt);
 		auto lastNotQACol = ColIntToStr(lastNotQAColInt);
-		for (auto i = 0; i < newTeammates->Count; i++) {
-			for (auto row = 4; ; row += 3) {
-				if (String::IsNullOrEmpty(sheet->GetStr(worksheet, row, 2)))
-					break;
+		if (String::IsNullOrEmpty(firstQACol))
+			firstQACol = lastNotQACol + 1;
+		for (auto row = 4; ; row += 3) {
+			if (String::IsNullOrEmpty(sheet->GetStr(worksheet, row, 2)))
+				break;
 
-				sheet->SetStr(worksheet, row, 3, "=IF(COUNT(E" + (row + 1) + ":" + lastNotQACol + (row + 1) + ")>0,AVERAGE(E" + (row + 1) + ":" + lastNotQACol + (row + 1) + "),0)");
-				sheet->SetStr(worksheet, row + 1, 3, "=IF(COUNT(" + firstQACol + (row + 1) + ":" + lastColLetter + (row + 1) + ")>0,AVERAGE(" + firstQACol + (row + 1) + ":" + lastColLetter + (row + 1) + "),0)");
-			}
+			sheet->SetStr(worksheet, row, 3, "=IF(COUNT(E" + (row + 1) + ":" + lastNotQACol + (row + 1) + ")>0,AVERAGE(E" + (row + 1) + ":" + lastNotQACol + (row + 1) + "),0)");
+			sheet->SetStr(worksheet, row + 1, 3, "=IF(COUNT(" + firstQACol + (row + 1) + ":" + lastColLetter + (row + 1) + ")>0,AVERAGE(" + firstQACol + (row + 1) + ":" + lastColLetter + (row + 1) + "),0)");
 		}
 
 		worksheet = sheet->GetWorksheetsByName("Sprint")[0];
@@ -744,12 +755,31 @@ namespace WodExelSprint {
 				continue;
 			}
 			if (lastTeam == team) {
-				for (auto i = 0; i < newTeammates->Count; i++) {
-					sheet->InsertRowUp(worksheet, row + 1);
-					sheet->SetStr(worksheet, row + 1, 1, newTeammates[i]);
-					sheet->SetStr(worksheet, row + 1, 2, "=C" + (row + 1) + "/$B$2");
-					sheet->SetStr(worksheet, row + 1, 3, "0");
-					sheet->SetStr(worksheet, "=" + ColIntToStr(4) + (row + 1) + ":" + ColIntToStr(5) + (row + 1), "");
+				curr = 0;
+				auto r = row;
+				for (auto i = 0; i < teammates->Count; i++) {
+					auto teammate = teammates[i];
+					if (current[curr] == teammate) {
+						r++;
+						curr++;
+						continue;
+					}
+
+					sheet->InsertRowUp(worksheet, r);
+				}
+				curr = 0;
+				r = row;
+				for (auto i = 0; i < teammates->Count; i++, r++) {
+					auto teammate = teammates[i];
+					if (current[curr] == teammate) {
+						curr++;
+						continue;
+					}
+
+					sheet->SetStr(worksheet, r, 1, teammates[i]);
+					sheet->SetStr(worksheet, r, 2, "=C" + (r)+"/$B$2");
+					sheet->SetStr(worksheet, r, 3, "0");
+					sheet->SetStr(worksheet, "=" + ColIntToStr(4) + (r)+":" + ColIntToStr(5) + (r), "");
 				}
 				break;
 			}
